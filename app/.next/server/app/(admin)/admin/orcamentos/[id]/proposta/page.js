@@ -1,0 +1,13 @@
+var R=require("../../../../../../chunks/ssr/[turbopack]_runtime.js")("server/app/(admin)/admin/orcamentos/[id]/proposta/page.js")
+R.c("server/chunks/ssr/_0zv76sl._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0z5ob0b._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__11e5203._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0u8g2ib._.js")
+R.c("server/chunks/ssr/src_app_layout_tsx_0r5yz5t._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_0wpq8j3._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_forbidden_0symwr9.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_0l_sp0x.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_0q-w892.js")
+R.c("server/chunks/ssr/1oeh_server_app_(admin)_admin_orcamentos_[id]_proposta_page_actions_11ff_gp.js")
+R.m(78460)
+module.exports=R.m(78460).exports
