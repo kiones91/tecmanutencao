@@ -6,9 +6,12 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder';
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    key,
     {
       cookies: {
         getAll() {
@@ -27,6 +30,11 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
+  // Se estiver usando chaves placeholder (ex: build time), não bloqueia
+  if (url.includes('placeholder') || key === 'placeholder') {
+    return supabaseResponse;
+  }
+
   // Obter usuário autenticado
   const {
     data: { user },
@@ -38,17 +46,17 @@ export async function updateSession(request: NextRequest) {
 
   // Redirecionamento se não autenticado em rotas protegidas
   if (!user && (isProtectedAdmin || isProtectedCampo)) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    url.searchParams.set('redirectTo', request.nextUrl.pathname);
-    return NextResponse.redirect(url);
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/login';
+    redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname);
+    return NextResponse.redirect(redirectUrl);
   }
 
   // Redirecionamento se já autenticado tentando acessar /login
   if (user && isAuthRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/admin';
-    return NextResponse.redirect(url);
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/admin';
+    return NextResponse.redirect(redirectUrl);
   }
 
   return supabaseResponse;
