@@ -1,9 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0a0d14;
+  --color-surface: #111622;
+  --color-card: #161c2c;
+  --color-border: #232b3e;
+  --color-primary: #fcdc5d;
+  --color-primary-hover: #f5cb3c;
+  --color-muted: #94a3b8;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Outfit', system-ui, sans-serif;
+
+  --radius-card: 16px;
+}
 
 :root {
-  /* Dark Industrial Palette - Extraída do site atual */
   --background: #0a0d14;
   --surface: #111622;
   --card-elevated: #161c2c;
@@ -25,20 +39,21 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
   background-color: var(--background);
   color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-display);
 }
 
 button, a {
   cursor: pointer;
 }
 
-/* Utility classes para a paleta */
+/* Utilitários complementares de layout e identidade */
 .bg-background { background-color: var(--background); }
 .bg-surface { background-color: var(--surface); }
 .bg-card { background-color: var(--card-elevated); }
