@@ -1,13 +1,44 @@
-```
 # Next.js build outputs
 .next/
+.turbo/
 
 # Dependencies
 node_modules/
 
 # Environment variables
-.env*
+.env
+.env.local
+.env.*
 !.env.example
+
+# Build artifacts
+dist/
+build/
+*.js.map
+*.d.ts
+*.d.ts.map
+*.cjs
+*.cjs.map
+*.mjs
+*.mjs.map
+*.cts
+*.cts.map
+*.mts
+*.mts.map
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
 
 # Logs
 *.log
