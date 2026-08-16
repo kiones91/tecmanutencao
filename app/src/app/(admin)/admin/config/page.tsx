@@ -1,216 +1,283 @@
-import { requireAdmin } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { ArrowLeft, Settings, DollarSign, TrendingUp, Wrench, FileText } from 'lucide-react';
 
-export default async function ConfigPage() {
-  const auth = await requireAdmin();
-  
-  if (auth.redirect) {
-    redirect('/atendimento/login');
-  }
-
+export default function AdminConfig() {
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border-subtle bg-surface">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
-            <a href="/admin" className="text-secondary hover:text-primary transition-colors">← Voltar</a>
-            <h1 className="text-2xl font-bold text-primary">Configurações</h1>
+    <div className="min-h-screen bg-[#0a0d14] text-[#f8fafc]">
+      {/* Header */}
+      <header className="border-b border-[#232b3e] bg-[#111622]">
+        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
+          <Link href="/admin" className="text-[#94a3b8] hover:text-[#f8fafc] transition-colors">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <div className="flex items-center gap-3">
+            <Settings className="h-6 w-6 text-[#fcdc5d]" />
+            <div>
+              <h1 className="text-xl font-bold font-outfit">Configurações</h1>
+              <p className="text-xs text-[#94a3b8]">Parâmetros do sistema</p>
+            </div>
           </div>
         </div>
       </header>
 
+      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <div className="space-y-8">
-          {/* Parâmetros Financeiros */}
-          <section className="bg-card-elevated rounded-lg p-6 border border-border-subtle">
-            <h2 className="text-xl font-semibold text-primary mb-4">Parâmetros Financeiros</h2>
-            <p className="text-secondary text-sm mb-6">Valores seed conforme especificação do negócio</p>
-            
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              <ParamField 
-                label="Margem Padrão (%)" 
-                value="20" 
-                description="Margem de lucro padrão para cálculos"
-              />
-              <ParamField 
-                label="Imposto Anexo III (%)" 
-                value="6" 
-                description="Manutenção/instalação"
-              />
-              <ParamField 
-                label="Imposto Anexo V (%)" 
-                value="15.5" 
-                description="Engenharia/projetos (sem Fator R)"
-              />
-              <ParamField 
-                label="Fator R" 
-                value="Ativo" 
-                description="Se folha ≥ 28% do faturamento, Anexo V cai para 6%"
-              />
-              <ParamField 
-                label="Markup Material Min (%)" 
-                value="20" 
-                description="Mínimo para materiais"
-              />
-              <ParamField 
-                label="Markup Material Max (%)" 
-                value="30" 
-                description="Máximo para materiais"
-              />
-              <ParamField 
-                label="Custo Fixo Mensal (R$)" 
-                value="9.000 - 13.000" 
-                description="Faixa para cálculo do BDI"
-              />
-              <ParamField 
-                label="Horas Úteis/Mês" 
-                value="320" 
-                description="Base para rateio do BDI"
-              />
-              <ParamField 
-                label="Km Rodado (R$/km)" 
-                value="1.80 - 2.50" 
-                description="Faixa de reembolso"
-              />
-              <ParamField 
-                label="Alimentação/Dia (R$)" 
-                value="70" 
-                description="Por pessoa"
-              />
-              <ParamField 
-                label="Saída Mínima Predial (R$)" 
-                value="50" 
-                description="Quando km = 0"
-              />
-              <ParamField 
-                label="Garantia (dias)" 
-                value="90" 
-                description="Termo de garantia padrão"
-              />
-              <ParamField 
-                label="ART Padrão (R$)" 
-                value="120" 
-                description="Valor por ART"
-              />
-            </div>
-          </section>
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold font-outfit mb-2">Parâmetros Financeiros</h2>
+          <p className="text-[#94a3b8]">Configure as regras de precificação e impostos</p>
+        </section>
 
-          {/* Linhas de Serviço */}
-          <section className="bg-card-elevated rounded-lg p-6 border border-border-subtle">
-            <h2 className="text-xl font-semibold text-primary mb-4">Linhas de Serviço</h2>
-            <div className="space-y-3">
-              <ServiceLine code="NR12" name="NR12 Turnkey" anexo="III" faixa="R$ 27.900–32.000" />
-              <ServiceLine code="AUTO" name="Automação/Retrofit" anexo="V" faixa="R$ 69.500–80.000" />
-              <ServiceLine code="PARADA" name="Parada Programada" anexo="III" faixa="R$ 41.900" />
-              <ServiceLine code="MANUT" name="Manutenção Preventiva" anexo="III" faixa="Contrato mensal" />
+        {/* Config Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Impostos */}
+          <div className="bg-[#161c2c] rounded-2xl p-6 border border-[#232b3e]">
+            <div className="flex items-center gap-3 mb-4">
+              <DollarSign className="h-6 w-6 text-[#fcdc5d]" />
+              <h3 className="text-lg font-bold font-outfit">Impostos (Simples Nacional)</h3>
             </div>
-          </section>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">Anexo III (Manutenção/Instalação)</label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={6}
+                    className="flex-1 bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <span className="text-[#94a3b8]">%</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">Anexo V (Engenharia/Projetos)</label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={15.5}
+                    className="flex-1 bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <span className="text-[#94a3b8]">%</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between pt-4 border-t border-[#232b3e]">
+                <div>
+                  <p className="font-medium">Fator R Ativo</p>
+                  <p className="text-xs text-[#94a3b8]">Folha ≥ 28% do faturamento → Anexo V cai para 6%</p>
+                </div>
+                <button className="w-12 h-6 bg-[#fcdc5d] rounded-full relative">
+                  <span className="absolute right-1 top-1 w-4 h-4 bg-[#0a0d14] rounded-full"></span>
+                </button>
+              </div>
+            </div>
+          </div>
 
-          {/* Recursos */}
-          <section className="bg-card-elevated rounded-lg p-6 border border-border-subtle">
-            <h2 className="text-xl font-semibold text-primary mb-4">Recursos</h2>
-            <div className="space-y-3">
-              <ResourceItem name="Kiones" tipo="Sênior Automação" venda="R$ 200–300/h" />
-              <ResourceItem name="Dioleno" tipo="Técnico Pleno" venda="R$ 120–150/h" />
-              <ResourceItem name="Maike" tipo="Eng. Eletricista (ART)" venda="R$ 150–200/h" />
-              <ResourceItem name="Eletricista Industrial" tipo="Campo" venda="R$ 80–100/h" custo="R$ 35–50/h" />
-              <ResourceItem name="Ajudante" tipo="Campo" venda="R$ 45–60/h" />
-              <ResourceItem name="Freelancer" tipo="Terceiro" venda="Variável" />
+          {/* Margem e BDI */}
+          <div className="bg-[#161c2c] rounded-2xl p-6 border border-[#232b3e]">
+            <div className="flex items-center gap-3 mb-4">
+              <TrendingUp className="h-6 w-6 text-[#fcdc5d]" />
+              <h3 className="text-lg font-bold font-outfit">Margem e BDI</h3>
             </div>
-          </section>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">Margem Padrão (%)</label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={20}
+                    className="flex-1 bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <span className="text-[#94a3b8]">%</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">Custo Fixo Mensal (R$)</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={9000}
+                    placeholder="Mínimo"
+                    className="bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <input 
+                    type="number" 
+                    defaultValue={13000}
+                    placeholder="Máximo"
+                    className="bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">Horas Úteis/Mês</label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={320}
+                    className="flex-1 bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <span className="text-[#94a3b8]">h</span>
+                </div>
+                <p className="text-xs text-[#94a3b8] mt-1">BDI = (9000+13000)/2 / 320 = R$ 34,38/h</p>
+              </div>
+            </div>
+          </div>
 
-          {/* Adicionais Industriais */}
-          <section className="bg-card-elevated rounded-lg p-6 border border-border-subtle">
-            <h2 className="text-xl font-semibold text-primary mb-4">Adicionais Industriais</h2>
-            <div className="grid gap-3 md:grid-cols-2">
-              <AdditionalItem name="Periculosidade (linha viva/AT/MT)" valor="+30%" ambito="Venda" />
-              <AdditionalItem name="Noturno (22h-05h)" valor="+50%" ambito="Venda" />
-              <AdditionalItem name="Parada de fábrica / fim de semana" valor="+50%" ambito="Venda" />
-              <AdditionalItem name="NR-33 / NR-35 (espaço confinado / altura)" valor="+R$ 80/dia/pessoa" ambito="Custo" />
-              <AdditionalItem name="Atmosfera explosiva / planta química" valor="+R$ 100/dia" ambito="Custo" />
-              <AdditionalItem name="Ruído/poeira/peçonhentos" valor="+R$ 50/dia" ambito="Custo" />
+          {/* Materiais */}
+          <div className="bg-[#161c2c] rounded-2xl p-6 border border-[#232b3e]">
+            <div className="flex items-center gap-3 mb-4">
+              <Wrench className="h-6 w-6 text-[#fcdc5d]" />
+              <h3 className="text-lg font-bold font-outfit">Materiais e Logística</h3>
             </div>
-          </section>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">Markup Material (%)</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={20}
+                    placeholder="Mínimo"
+                    className="bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <input 
+                    type="number" 
+                    defaultValue={30}
+                    placeholder="Máximo"
+                    className="bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">Km Rodado (R$/km)</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={1.8}
+                    step="0.1"
+                    placeholder="Mínimo"
+                    className="bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <input 
+                    type="number" 
+                    defaultValue={2.5}
+                    step="0.1"
+                    placeholder="Máximo"
+                    className="bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">Alimentação (R$/dia/pessoa)</label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={70}
+                    className="flex-1 bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <span className="text-[#94a3b8]">R$</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">Saída Mínima Predial</label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={50}
+                    className="flex-1 bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <span className="text-[#94a3b8]">R$</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Outros */}
+          <div className="bg-[#161c2c] rounded-2xl p-6 border border-[#232b3e]">
+            <div className="flex items-center gap-3 mb-4">
+              <FileText className="h-6 w-6 text-[#fcdc5d]" />
+              <h3 className="text-lg font-bold font-outfit">Outros Parâmetros</h3>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">Garantia (dias)</label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={90}
+                    className="flex-1 bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <span className="text-[#94a3b8]">dias</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm text-[#94a3b8] mb-2">ART Padrão (R$)</label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    defaultValue={120}
+                    className="flex-1 bg-[#111622] border border-[#232b3e] rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d]"
+                  />
+                  <span className="text-[#94a3b8]">R$</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Linhas de Serviço e Recursos */}
+        <section className="mt-8">
+          <h3 className="text-xl font-bold font-outfit mb-4">Linhas de Serviço e Recursos</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-[#161c2c] rounded-2xl p-6 border border-[#232b3e]">
+              <h4 className="font-semibold mb-4">Linhas de Serviço</h4>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center justify-between p-3 bg-[#111622] rounded-xl">
+                  <span>NR12 - Adequação de Máquinas</span>
+                  <span className="text-[#94a3b8]">Anexo III</span>
+                </li>
+                <li className="flex items-center justify-between p-3 bg-[#111622] rounded-xl">
+                  <span>Automação Industrial / Retrofit</span>
+                  <span className="text-[#94a3b8]">Anexo V</span>
+                </li>
+                <li className="flex items-center justify-between p-3 bg-[#111622] rounded-xl">
+                  <span>Parada Programada de Manutenção</span>
+                  <span className="text-[#94a3b8]">Anexo III</span>
+                </li>
+                <li className="flex items-center justify-between p-3 bg-[#111622] rounded-xl">
+                  <span>Contrato Mensal (Preventivo)</span>
+                  <span className="text-[#94a3b8]">Anexo III</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-[#161c2c] rounded-2xl p-6 border border-[#232b3e]">
+              <h4 className="font-semibold mb-4">Recursos (Equipe)</h4>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center justify-between p-3 bg-[#111622] rounded-xl">
+                  <span>Kiones — Sênior Automação</span>
+                  <span className="text-[#fcdc5d]">Venda: R$ 200-300/h</span>
+                </li>
+                <li className="flex items-center justify-between p-3 bg-[#111622] rounded-xl">
+                  <span>Dioleno — Técnico Pleno</span>
+                  <span className="text-[#fcdc5d]">Venda: R$ 120-150/h</span>
+                </li>
+                <li className="flex items-center justify-between p-3 bg-[#111622] rounded-xl">
+                  <span>Maike — Eng. Eletricista (ART)</span>
+                  <span className="text-[#fcdc5d]">Venda: R$ 150-200/h</span>
+                </li>
+                <li className="flex items-center justify-between p-3 bg-[#111622] rounded-xl">
+                  <span>Eletricista Industrial (Campo)</span>
+                  <span className="text-[#94a3b8]">Venda: R$ 80-100/h | Custo: R$ 35-50/h</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Save Button */}
+        <div className="mt-8 flex justify-end">
+          <button className="bg-[#fcdc5d] hover:bg-[#f5cb3c] text-[#0a0d14] font-semibold py-3 px-8 rounded-xl transition-all drop-shadow-[0_0_15px_rgba(252,220,93,0.3)]">
+            Salvar Configurações
+          </button>
         </div>
       </main>
-    </div>
-  );
-}
-
-interface ParamFieldProps {
-  label: string;
-  value: string;
-  description: string;
-}
-
-function ParamField({ label, value, description }: ParamFieldProps) {
-  return (
-    <div className="bg-surface rounded p-4 border border-border-subtle">
-      <label className="text-secondary text-xs font-medium">{label}</label>
-      <p className="text-primary font-semibold mt-1">{value}</p>
-      <p className="text-secondary text-xs mt-1">{description}</p>
-    </div>
-  );
-}
-
-interface ServiceLineProps {
-  code: string;
-  name: string;
-  anexo: string;
-  faixa: string;
-}
-
-function ServiceLine({ code, name, anexo, faixa }: ServiceLineProps) {
-  return (
-    <div className="flex items-center justify-between bg-surface rounded p-3 border border-border-subtle">
-      <div>
-        <span className="text-primary-brand font-mono text-xs">{code}</span>
-        <p className="text-primary font-medium">{name}</p>
-      </div>
-      <div className="text-right">
-        <span className="text-secondary text-xs">Anexo {anexo}</span>
-        <p className="text-primary text-sm">{faixa}</p>
-      </div>
-    </div>
-  );
-}
-
-interface ResourceItemProps {
-  name: string;
-  tipo: string;
-  venda: string;
-  custo?: string;
-}
-
-function ResourceItem({ name, tipo, venda, custo }: ResourceItemProps) {
-  return (
-    <div className="flex items-center justify-between bg-surface rounded p-3 border border-border-subtle">
-      <div>
-        <p className="text-primary font-medium">{name}</p>
-        <p className="text-secondary text-xs">{tipo}</p>
-      </div>
-      <div className="text-right">
-        <p className="text-primary text-sm">{venda}</p>
-        {custo && <p className="text-secondary text-xs">Custo: {custo}</p>}
-      </div>
-    </div>
-  );
-}
-
-interface AdditionalItemProps {
-  name: string;
-  valor: string;
-  ambito: string;
-}
-
-function AdditionalItem({ name, valor, ambito }: AdditionalItemProps) {
-  return (
-    <div className="flex items-center justify-between bg-surface rounded p-3 border border-border-subtle">
-      <p className="text-primary text-sm">{name}</p>
-      <div className="text-right">
-        <span className="text-primary-brand font-semibold">{valor}</span>
-        <span className="text-secondary text-xs ml-2">({ambito})</span>
-      </div>
     </div>
   );
 }
