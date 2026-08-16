@@ -75,12 +75,16 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <nav className="hidden md:flex items-center gap-6 text-xs font-medium">
+          <nav className="hidden lg:flex items-center gap-5 text-xs font-medium">
             <Link href="/admin" className="text-[#fcdc5d] font-bold">Painel</Link>
             <Link href="/admin/leads" className="text-[#94a3b8] hover:text-white transition-colors">Leads CRM</Link>
+            <Link href="/admin/contratos" className="text-[#94a3b8] hover:text-white transition-colors">Contratos</Link>
             <Link href="/admin/orcamentos" className="text-[#94a3b8] hover:text-white transition-colors">Orçamentos</Link>
-            <Link href="/campo" className="text-[#94a3b8] hover:text-white transition-colors">Modo Campo</Link>
-            <Link href="/admin/config" className="text-[#94a3b8] hover:text-white transition-colors">Configurações</Link>
+            <Link href="/admin/financeiro" className="text-[#94a3b8] hover:text-white transition-colors">Financeiro & DRE</Link>
+            <Link href="/admin/suprimentos" className="text-[#94a3b8] hover:text-white transition-colors">Suprimentos</Link>
+            <Link href="/admin/bi" className="text-[#94a3b8] hover:text-white transition-colors">BI</Link>
+            <Link href="/campo" className="text-[#94a3b8] hover:text-white transition-colors">Campo</Link>
+            <Link href="/admin/config" className="text-[#94a3b8] hover:text-white transition-colors">Config</Link>
           </nav>
 
           <div className="flex items-center gap-3">
