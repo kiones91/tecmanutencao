@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import { Users, Search, Filter, CheckCircle, XCircle, Copy, UserPlus, Trash2 } from 'lucide-react';
 
 interface Lead {
@@ -40,12 +39,30 @@ const STATUS_COLORS = {
   convertido: 'bg-emerald-600',
 };
 
+// Mock de leads para desenvolvimento
+const MOCK_LEADS: Lead[] = [
+  {
+    id: '1',
+    nome: 'João Silva',
+    whatsapp: '11999999999',
+    origem: 'site',
+    status: 'novo',
+    score: 85,
+    payload_ia: {
+      resumo: 'Cliente precisa de manutenção em painel industrial',
+      categoria: 'industrial',
+      urgencia: 'media',
+      confianca: 0.9,
+    },
+    criado_em: new Date().toISOString(),
+  },
+];
+
 export default function LeadsPage() {
-  const [leads, setLeads] = useState<Lead[]>([]);
+  const [leads, setLeads] = useState<Lead[]>(MOCK_LEADS);
   const [filtroStatus, setFiltroStatus] = useState<string>('todos');
   const [busca, setBusca] = useState('');
-  const [carregando, setCarregando] = useState(true);
-  const supabase = createClient();
+  const [carregando, setCarregando] = useState(false);
 
   // Carregar leads com realtime
   useEffect(() => {

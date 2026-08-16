@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Wrench, Camera, Mic, Send, X, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
 
 interface Midia {
   tipo: 'imagem' | 'video' | 'audio';
@@ -34,7 +33,6 @@ export default function AtendimentoPublico() {
   const [mensagens, setMensagens] = useState<MensagemChat[]>([]);
   const [erros, setErros] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const supabase = createClient();
 
   // Validação de WhatsApp em tempo real
   const validarWhatsApp = (valor: string) => {
