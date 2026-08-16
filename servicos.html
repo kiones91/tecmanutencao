@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços | TecManutenções Engenharia & Automação</title>
+    <meta name="description" content="Especialidades em Adequação NR12, Automação Industrial, Retrofit e Cabines Primárias na região de Rio Claro.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config for TecManutenções Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#fcdc5d',
+                        primary_hover: '#f5cb3c',
+                        dark: '#0a0d14',
+                        dark_surface: '#111622',
+                        dark_card: '#161c2c',
+                        dark_border: '#232b3e',
+                        muted: '#94a3b8',
+                    },
+                    boxShadow: {
+                        'glow': '0 0 25px -5px rgba(252, 220, 93, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #0a0d14;
+            color: #f8fafc;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(252, 220, 93, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(252, 220, 93, 0.02) 0%, transparent 40%);
+        }
+        .glass-card {
+            background: #111622;
+            border: 1px solid #232b3e;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(252, 220, 93, 0.4);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6), 0 0 20px -5px rgba(252, 220, 93, 0.15);
+        }
+    </style>
+</head>
+<body class="text-slate-100 antialiased selection:bg-primary selection:text-dark">
+
+    <!-- Navbar -->
+    <header class="fixed w-full top-0 z-50 bg-[#0a0d14]/90 backdrop-blur-md border-b border-dark_border transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="index.html" class="flex flex-col">
+                <div class="font-display font-extrabold text-2xl tracking-tight text-white flex items-center">
+                    <span class="text-primary font-black">Tec</span><span>Manutenções</span>
+                </div>
+                <span class="text-[10px] uppercase font-bold tracking-widest text-primary/80 -mt-1">Engenharia & Automação</span>
+            </a>
+            <nav class="hidden md:flex gap-8 items-center">
+                <a href="servicos.html" class="font-medium text-sm text-primary transition-colors">Serviços</a>
+                <a href="portfolio.html" class="font-medium text-sm text-slate-300 hover:text-primary transition-colors">Portfólio de Execuções</a>
+                <a href="index.html#equipe" class="font-medium text-sm text-slate-300 hover:text-primary transition-colors">A Equipe</a>
+                <a href="index.html#faq" class="font-medium text-sm text-slate-300 hover:text-primary transition-colors">Dúvidas / ART</a>
+            </nav>
+            <a href="https://wa.me/5519983808498?text=Ol%C3%A1,%20gostaria%20de%20um%20or%C3%A7amento%20com%20a%20TecManuten%C3%A7%C3%B5es" target="_blank" class="flex items-center gap-2 bg-primary text-dark font-extrabold px-6 py-2.5 rounded-full text-sm hover:bg-primary_hover transition-all shadow-glow hover:shadow-glow-lg transform hover:-translate-y-0.5">
+                Falar com Especialista
+            </a>
+        </div>
+    </header>
+
+    <!-- Services Header -->
+    <section class="pt-36 pb-20 bg-[#0a0d14] relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs font-bold tracking-widest uppercase mb-4">
+                    Soluções de Ponta a Ponta
+                </div>
+                <h1 class="font-display text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight">Especialidades <span class="text-primary">TecManutenções</span></h1>
+                <p class="text-slate-400 text-lg max-w-3xl mx-auto">Soluções completas desenhadas para eliminar gargalos, reduzir paradas e garantir segurança jurídica com emissão de ART.</p>
+            </div>
+
+            <div class="space-y-16">
+                
+                <!-- NR12 Section -->
+                <div class="glass-card rounded-2xl p-8 lg:p-12 flex flex-col lg:flex-row gap-12 items-center">
+                    <div class="w-full lg:w-1/2">
+                        <div class="w-14 h-14 bg-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mb-6 text-primary shadow-glow">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <h2 class="font-display text-3xl font-bold text-white mb-4">Adequação NR12 (Turnkey)</h2>
+                        <p class="text-slate-400 text-base leading-relaxed mb-6">
+                            Esqueça as multas e o risco de interdição. Entregamos a máquina legalizada de ponta a ponta: Apreciação de Riscos, projeto elétrico/mecânico, instalação de relés e emissão de ART via engenheiros parceiros credenciados no CREA.
+                        </p>
+                        <ul class="space-y-4 mb-6">
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Apreciação de Risco Inicial</strong> Documentação completa dos riscos mecânicos e elétricos da máquina.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Engenharia de Execução</strong> Instalação de CLPs de segurança, chaves de intertravamento, cortinas de luz e adequação de painéis elétricos.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Validação Final e ART</strong> Laudo conclusivo de conformidade NR12 assinado por Engenheiro com recolhimento de ART.</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="w-full lg:w-1/2">
+                        <img src="assets/hero_panel_1786474005771.png" alt="Adequação NR12 TecManutenções" class="w-full rounded-2xl border border-dark_border object-cover h-80 shadow-2xl">
+                    </div>
+                </div>
+
+                <!-- Automação Section -->
+                <div class="glass-card rounded-2xl p-8 lg:p-12 flex flex-col lg:flex-row-reverse gap-12 items-center">
+                    <div class="w-full lg:w-1/2">
+                        <div class="w-14 h-14 bg-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mb-6 text-primary shadow-glow">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <h2 class="font-display text-3xl font-bold text-white mb-4">Automação e Retrofit</h2>
+                        <p class="text-slate-400 text-base leading-relaxed mb-6">
+                            Transformamos máquinas obsoletas em equipamentos de alta produtividade. Modernização completa que se paga com o aumento de OEE. Possuímos grande <em>know-how</em> na <strong>montagem eletromecânica de Extrusoras de Plástico para granulados PEAD</strong>.
+                        </p>
+                        <ul class="space-y-4 mb-6">
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Montagem de Painéis (CCM / QGBT)</strong> Quadros montados com componentes industriais de ponta e chicotes impecáveis.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Programação de CLP e IHM</strong> Lógicas limpas e telas amigáveis para o operador entender e reduzir o tempo de setup.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Redes Industriais e Inversores</strong> Parametrização de drives, soft starters e instrumentação para sincronismo perfeito.</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="w-full lg:w-1/2">
+                        <img src="assets/factory_floor_1786474026652.png" alt="Automação Industrial TecManutenções" class="w-full rounded-2xl border border-dark_border object-cover h-80 shadow-2xl">
+                    </div>
+                </div>
+
+                <!-- Paradas Section -->
+                <div class="glass-card rounded-2xl p-8 lg:p-12 flex flex-col lg:flex-row gap-12 items-center">
+                    <div class="w-full lg:w-1/2">
+                        <div class="w-14 h-14 bg-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mb-6 text-primary shadow-glow">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h2 class="font-display text-3xl font-bold text-white mb-4">Paradas de Manutenção</h2>
+                        <p class="text-slate-400 text-base leading-relaxed mb-6">
+                            Sua equipe interna não dá conta da parada geral? Nós fornecemos o reforço técnico qualificado: profissionais de campo disciplinados que executam com precisão.
+                        </p>
+                        <ul class="space-y-4 mb-6">
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Revisão e Limpeza de Painéis</strong> Limpeza técnica, reaperto com torquímetro e substituição de componentes oxidados.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Revisão de Motores e Infraestrutura</strong> Medição de isolação (Megger), troca de rolamentos e manutenção em eletrocalhas.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Startup Assistido</strong> Acompanhamento no retorno da fábrica para garantir partida 100% lisa.</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="w-full lg:w-1/2">
+                        <img src="assets/automation_tech_1786474016027.png" alt="Paradas Elétricas TecManutenções" class="w-full rounded-2xl border border-dark_border object-cover h-80 shadow-2xl">
+                    </div>
+                </div>
+
+                <!-- Cabines Primárias Section -->
+                <div class="glass-card rounded-2xl p-8 lg:p-12 flex flex-col lg:flex-row-reverse gap-12 items-center">
+                    <div class="w-full lg:w-1/2">
+                        <div class="w-14 h-14 bg-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mb-6 text-primary shadow-glow">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h2 class="font-display text-3xl font-bold text-white mb-4">Cabines Primárias e Subestações</h2>
+                        <p class="text-slate-400 text-base leading-relaxed mb-6">
+                            A energia não pode oscilar nem falhar. Executamos projetos, comissionamento e manutenção preventiva anual rigorosa em cabines primárias e subestações industriais.
+                        </p>
+                        <ul class="space-y-4 mb-6">
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Manutenção Preventiva (Parada Anual)</strong> Limpeza química, reaperto com torque específico e termografia em barramentos.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Ensaios Elétricos e Laudos</strong> Resistência ôhmica, resistência de isolamento (Megger), testes em relés de proteção e análise de óleo do transformador.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-primary font-black mt-0.5">✔</span>
+                                <div><strong class="text-white block">Adequação e Comissionamento</strong> Projetos de modernização e startup seguro de novas cabines primárias para ampliação de carga.</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="w-full lg:w-1/2">
+                        <img src="assets/g04.jpg" alt="Manutenção Cabine Primária TecManutenções" class="w-full rounded-2xl border border-dark_border object-cover h-80 shadow-2xl">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CTA Interno -->
+            <div class="mt-20 text-center glass-card rounded-2xl p-12 border border-primary/30">
+                <h3 class="font-display text-3xl font-bold text-white mb-4">Precisa de orçamento técnico para a sua fábrica?</h3>
+                <p class="text-slate-400 mb-8 max-w-xl mx-auto">Fale diretamente com os especialistas da TecManutenções no WhatsApp para agendamento de visita técnica sem custo.</p>
+                <a href="https://wa.me/5519983808498?text=Ol%C3%A1,%20gostaria%20de%20um%20or%C3%A7amento%20com%20a%20TecManuten%C3%A7%C3%B5es" target="_blank" class="inline-flex items-center gap-3 bg-primary text-dark px-8 py-4 rounded-xl font-extrabold text-base hover:bg-primary_hover transition-all shadow-glow">
+                    Falar no WhatsApp: (19) 98380-8498
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#070a0f] border-t border-dark_border py-10">
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-500">
+            <p>&copy; 2026 TecManutenções Engenharia e Automação Industrial LTDA. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

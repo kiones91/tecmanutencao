@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio de Execuções | TecManutenções</title>
+    <meta name="description" content="Histórico de mais de 30 execuções reais em painéis elétricos, automação industrial e conformidade NR12 e NBR 5410.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config for TecManutenções Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#fcdc5d',
+                        primary_hover: '#f5cb3c',
+                        dark: '#0a0d14',
+                        dark_surface: '#111622',
+                        dark_card: '#161c2c',
+                        dark_border: '#232b3e',
+                        muted: '#94a3b8',
+                    },
+                    boxShadow: {
+                        'glow': '0 0 25px -5px rgba(252, 220, 93, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #0a0d14;
+            color: #f8fafc;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(252, 220, 93, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(252, 220, 93, 0.02) 0%, transparent 40%);
+        }
+        .glass-card {
+            background: #111622;
+            border: 1px solid #232b3e;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(252, 220, 93, 0.4);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6), 0 0 20px -5px rgba(252, 220, 93, 0.15);
+        }
+    </style>
+</head>
+<body class="text-slate-100 antialiased selection:bg-primary selection:text-dark">
+
+    <!-- Navbar -->
+    <header class="fixed w-full top-0 z-50 bg-[#0a0d14]/90 backdrop-blur-md border-b border-dark_border transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="index.html" class="flex flex-col">
+                <div class="font-display font-extrabold text-2xl tracking-tight text-white flex items-center">
+                    <span class="text-primary font-black">Tec</span><span>Manutenções</span>
+                </div>
+                <span class="text-[10px] uppercase font-bold tracking-widest text-primary/80 -mt-1">Engenharia & Automação</span>
+            </a>
+            <nav class="hidden md:flex gap-8 items-center">
+                <a href="servicos.html" class="font-medium text-sm text-slate-300 hover:text-primary transition-colors">Serviços</a>
+                <a href="portfolio.html" class="font-medium text-sm text-primary transition-colors">Portfólio de Execuções</a>
+                <a href="index.html#equipe" class="font-medium text-sm text-slate-300 hover:text-primary transition-colors">A Equipe</a>
+                <a href="index.html#faq" class="font-medium text-sm text-slate-300 hover:text-primary transition-colors">Dúvidas / ART</a>
+            </nav>
+            <a href="https://wa.me/5519983808498?text=Ol%C3%A1,%20gostaria%20de%20um%20or%C3%A7amento%20com%20a%20TecManuten%C3%A7%C3%B5es" target="_blank" class="flex items-center gap-2 bg-primary text-dark font-extrabold px-6 py-2.5 rounded-full text-sm hover:bg-primary_hover transition-all shadow-glow hover:shadow-glow-lg transform hover:-translate-y-0.5">
+                Falar com Especialista
+            </a>
+        </div>
+    </header>
+
+    <!-- Portfolio Header -->
+    <section class="pt-36 pb-20 bg-[#0a0d14] relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs font-bold tracking-widest uppercase mb-4">
+                    Galeria de Campo
+                </div>
+                <h1 class="font-display text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight">Portfólio de Execuções <span class="text-primary">TecManutenções</span></h1>
+                <p class="text-slate-400 text-lg max-w-3xl mx-auto">Mais de 30 fotos reais comprovando nossa autoridade no chão de fábrica e excelência técnica em painéis, automação e manutenções.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Exec 1 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g26.jpg" alt="Painel de comando com relés e proteção" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Painel de comando com relés e proteção</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Caixa de comando montada do zero com base isolante, relés de controle, borneira identificada e canaletas. Todo o chicote foi refeito com cabo de seção correta, terminais prensados e identificação ponto a ponto, eliminando emendas improvisadas que causavam falha intermitente na partida.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Chicote refeito com terminais prensados</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Identificação de todos os pontos e bornes</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste de continuidade e de comando antes da energização</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 2 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g25.jpg" alt="Quadro de distribuição com trilho DIN e borneira" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Quadro de distribuição com trilho DIN e borneira</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Quadro remontado com disjuntores em trilho DIN, borneira de neutro e terra separadas, cabos penteados e circuitos etiquetados. O resultado é manutenção mais rápida, menor aquecimento e conformidade com a NBR 5410.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Separação correta de neutro e terra</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Circuitos etiquetados no diagrama do quadro</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Reaperto e teste de DR/DPS</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 3 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g27.jpg" alt="Manutenção eletromecânica em campo" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Manutenção industrial</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Manutenção eletromecânica em campo</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Intervenção em equipamento parado dentro da planta: inspeção do acionamento, checagem de sensores, contatores e cabeamento de comando. Trabalho executado com EPI completo e procedimento de bloqueio antes de qualquer intervenção.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Bloqueio e etiquetagem antes da intervenção</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Diagnóstico de comando, sensores e contatores</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Máquina devolvida testada em operação</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 4 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g28.jpg" alt="Ligação e revisão de motor trifásico" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Manutenção industrial</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Ligação e revisão de motor trifásico</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Revisão da caixa de ligação do motor: verificação do esquema estrela/triângulo conforme a tensão da rede, troca de terminais oxidados, reaperto no torque correto e teste de isolação antes de devolver o equipamento à operação.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Conferência do esquema estrela/triângulo</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Troca de terminais e reaperto no torque</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste de isolação e de rotação</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 5 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g29.jpg" alt="Aterramento e régua de bornes" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Instalação e infraestrutura</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Aterramento e régua de bornes</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Instalação de barramento de terra dedicado com cabo verde-amarelo em todos os equipamentos do painel e régua de bornes com numeração. Aterramento é o item mais ignorado da instalação e o que mais evita choque e queima de eletrônicos.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Barramento de terra dedicado</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Cabos identificados por cor e número</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Medição de continuidade do aterramento</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 6 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g30.jpg" alt="Emendas com conector, sem gambiarra" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Instalação e infraestrutura</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Emendas com conector, sem gambiarra</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Emenda torcida com fita isolante é a origem de boa parte dos incêndios em instalações antigas. Aqui todas as conexões passaram para conector de barra dimensionado para a bitola do cabo, com aperto adequado e reisolação profissional.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Remoção de emendas improvisadas</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Conector dimensionado para a bitola</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Reisolação e teste de aquecimento</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 7 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g23.jpg" alt="Painel de operação com botoeiras e IHM" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Painel de operação com botoeiras e IHM</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Manutenção do painel frontal de operação: troca de botoeiras e sinaleiros queimados, teste do botão de emergência, revisão do cabeamento até o CLP e verificação da IHM. Operador volta a enxergar o estado real da máquina.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Troca de botoeiras e sinaleiros</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste funcional do botão de emergência</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Revisão da fiação até o CLP</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 8 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g24.jpg" alt="Máquina liberada e sinalização em verde" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Máquina liberada e sinalização em verde</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Fechamento do atendimento: painel energizado, sequência de partida testada e sinalização verde confirmando o equipamento liberado. Todo serviço só é entregue depois do teste em operação na frente do cliente.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Sequência de partida testada</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Sinalização e intertravamentos conferidos</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Entrega com o cliente acompanhando</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 9 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g31.jpg" alt="Acionamento de motor em máquina de produção" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Manutenção industrial</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Acionamento de motor em máquina de produção</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Revisão do conjunto motor-redutor de uma máquina de produção: inspeção elétrica, verificação de aquecimento, reaperto das conexões e acompanhamento da corrente em regime para confirmar que o motor não está sofrendo.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Inspeção elétrica e térmica do motor</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Reaperto e revisão do cabo de alimentação</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Acompanhamento de corrente em regime</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 10 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g32.jpg" alt="Alimentação de motor em eletroduto flexível" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Instalação e infraestrutura</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Alimentação de motor em eletroduto flexível</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Alimentação do motor levada em eletroduto flexível metálico, fixado na estrutura da máquina e protegido contra vibração e atrito. Cabos separados de força e comando, com folga adequada para manutenção e troca do motor sem refazer o trajeto.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Eletroduto flexível fixado e protegido</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Separação de força e comando</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Folga prevista para manutenção do motor</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 11 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g21.jpg" alt="Atendimento dentro da planta industrial" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Manutenção industrial</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Atendimento dentro da planta industrial</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Boa parte da manutenção industrial acontece com a fábrica em operação ou em janela de parada. O atendimento é planejado com antecedência, material separado antes de começar e prazo combinado para a linha voltar no horário.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Janela de parada combinada com antecedência</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Material separado antes do início</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Linha devolvida testada no horário</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 12 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g22.jpg" alt="Painel de campo com display de operação" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Painel de campo com display de operação</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Painel de campo montado em estrutura metálica com display de operação, sinalizadores de estado e vedação adequada para ambiente externo. Fiação protegida contra intempérie e prensa-cabos em todas as entradas.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Grau de proteção adequado para área externa</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Prensa-cabos em todas as entradas</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste de sinalização e leitura em campo</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 13 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g01.jpg" alt="Montagem de painel de comando industrial" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Montagem de painel de comando industrial</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Projeto e montagem completa de painel de comando: dimensionamento de disjuntores e contatores, distribuição em trilho DIN, canaletas dimensionadas com folga para ampliação e cabeamento penteado com identificação em todas as pontas.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Dimensionamento de proteção conforme a carga</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Cabeamento identificado ponto a ponto</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste de comando antes da energização</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 14 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g02.jpg" alt="Instalação e parametrização de inversor de frequência" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Instalação e parametrização de inversor de frequência</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Instalação de inversor de frequência com cabo blindado, aterramento correto da malha e parametrização de rampa, corrente nominal e proteções. Partida acompanhada com medição de corrente na condição real de trabalho.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Cabo blindado e aterramento da malha</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Parametrização de rampa e proteções</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Medição de corrente em regime</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 15 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g03.jpg" alt="Automação com CLP e módulos de I/O" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Automação com CLP e módulos de I/O</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Montagem de painel de automação com CLP, módulos de I/O, fonte 24Vcc dedicada e borneira segregada entre força e sinal. Documentação de endereçamento entregue junto com o painel para facilitar manutenção futura.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Segregação de força e sinal</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Fonte 24Vcc dedicada e protegida</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Documentação de endereçamento de I/O</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 16 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g04.jpg" alt="CCM — centro de controle de motores" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">CCM — centro de controle de motores</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Intervenção em centro de controle de motores: revisão das gavetas, troca de contatores desgastados, ajuste de relés térmicos conforme a corrente nominal de cada motor e reaperto do barramento com torquímetro.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Ajuste de relé térmico por motor</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Troca de contatores desgastados</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Reaperto de barramento com torque</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 17 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g05.jpg" alt="Diagnóstico elétrico com instrumentação" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Manutenção industrial</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Diagnóstico elétrico com instrumentação</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Falha intermitente não se resolve por tentativa. O diagnóstico é feito com multímetro e alicate amperímetro, medindo tensão entre fases, desequilíbrio de corrente e continuidade de comando até isolar exatamente o componente defeituoso.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Medição de tensão e desequilíbrio de fases</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste de continuidade do circuito de comando</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Relatório do ponto de falha encontrado</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 18 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g06.jpg" alt="Inspeção termográfica de painéis" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Manutenção industrial</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Inspeção termográfica de painéis</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Inspeção termográfica com o painel em carga: pontos quentes em bornes, disjuntores e barramentos são identificados e corrigidos por reaperto ou troca antes de causarem parada de produção ou princípio de incêndio.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Varredura térmica com painel em carga</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Registro dos pontos quentes encontrados</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Correção e reinspeção após o reaperto</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 19 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g07.jpg" alt="Manutenção de motor elétrico em bancada" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Manutenção industrial</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Manutenção de motor elétrico em bancada</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Motor retirado da máquina e revisado em bancada: inspeção de rolamentos, limpeza do estator, teste de isolação com megôhmetro e medição de resistência dos enrolamentos antes da remontagem e devolução ao equipamento.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste de isolação com megôhmetro</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Inspeção e troca de rolamentos</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste em vazio antes de instalar</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 20 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g08.jpg" alt="Partida suave com soft starter" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Partida suave com soft starter</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Substituição de partida direta por soft starter em motor de alta inércia: instalação, parametrização de rampa de tensão e configuração do bypass, reduzindo o pico de corrente e o desgaste mecânico da transmissão.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Parametrização de rampa de partida</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Configuração de bypass e proteções</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Medição do pico de corrente antes e depois</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 21 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g09.jpg" alt="Infraestrutura em eletrocalha industrial" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Instalação e infraestrutura</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Infraestrutura em eletrocalha industrial</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Montagem de eletrocalha com suportes dimensionados, cabos de força e comando em vias separadas, curvas com raio adequado e identificação de cada circuito nas derivações. Infraestrutura pronta para expansão futura.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Suportação dimensionada e nivelada</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Separação física de força e comando</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Identificação de circuitos nas derivações</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 22 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g10.jpg" alt="Quadro de distribuição predial" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Instalação e infraestrutura</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Quadro de distribuição predial</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Substituição de quadro antigo por quadro novo em conformidade com a NBR 5410: disjuntores por circuito, dispositivo DR, DPS na entrada, barramentos de neutro e terra separados e tabela de circuitos fixada na porta.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>DR e DPS instalados e testados</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Barramentos de neutro e terra separados</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Tabela de circuitos na porta do quadro</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 23 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g11.jpg" alt="Subestação e entrada de energia" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Instalação e infraestrutura</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Subestação e entrada de energia</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Atendimento em subestação: limpeza de isoladores, reaperto de conexões de média tensão, inspeção do transformador e adequação da sinalização e do aterramento da cabine conforme exigência da concessionária.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Reaperto e limpeza das conexões</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Inspeção do transformador e do aterramento</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Sinalização de segurança adequada</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 24 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g12.jpg" alt="IHM de operação instalada e testada" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">IHM de operação instalada e testada</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Instalação e teste de IHM em painel de máquina: comunicação com o CLP, telas de comando e de alarmes verificadas, e treinamento rápido do operador sobre o que cada indicação significa na prática.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Comunicação IHM–CLP testada</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Telas de alarme verificadas</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Orientação de uso ao operador</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 25 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g13.jpg" alt="Sensores indutivos e fotoelétricos" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Manutenção industrial</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Sensores indutivos e fotoelétricos</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Troca e ajuste de sensores indutivos e fotoelétricos: verificação de distância de acionamento, fixação firme contra vibração, cabo protegido no trajeto e teste do sinal chegando corretamente na entrada do CLP.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Ajuste da distância de acionamento</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Fixação e proteção do cabo</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste do sinal na entrada do CLP</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 26 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g14.jpg" alt="Iluminação industrial em LED" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Instalação e infraestrutura</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Iluminação industrial em LED</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Substituição de luminárias antigas por LED high bay em galpão: cálculo do ponto de instalação, circuito dedicado com proteção própria e resultado medido em lux no piso, com redução direta na conta de energia.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Distribuição calculada para o galpão</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Circuito dedicado e protegido</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Medição de luminosidade no piso</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 27 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g15.jpg" alt="Barramento e malha de aterramento" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Instalação e infraestrutura</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Barramento e malha de aterramento</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Execução de barramento de aterramento em cobre com derivação individual para cada painel e equipamento, cabo verde-amarelo dimensionado e medição de resistência de terra para comprovar a eficácia da malha.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Barramento de cobre com derivação individual</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Cabo dimensionado por equipamento</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Medição da resistência de aterramento</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 28 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g16.jpg" alt="Grupo gerador com QTA" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Instalação e infraestrutura</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Grupo gerador com QTA</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Instalação e comissionamento de grupo gerador com quadro de transferência automática: intertravamento entre rede e gerador, teste de queda de energia simulada e verificação do tempo de comutação com a carga real.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Intertravamento rede/gerador conferido</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste com queda de energia simulada</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Tempo de comutação verificado em carga</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 29 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g17.jpg" alt="Medição de energia com TCs" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Instalação e infraestrutura</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Medição de energia com TCs</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Instalação de medidor de energia trifásico com transformadores de corrente por fase, permitindo acompanhar consumo, demanda e fator de potência por setor — base para qualquer projeto de redução de custo de energia.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>TCs instalados e polaridade conferida</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Medidor parametrizado com a relação correta</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Leitura de consumo e demanda validada</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 30 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g18.jpg" alt="Borneira montada com terminais e identificação" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Borneira montada com terminais e identificação</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Montagem de réguas de bornes em bancada antes da instalação em campo: cada condutor com ferrule prensado, anilha numerada conforme o diagrama e conferência ponto a ponto. Isso reduz o tempo de start-up na fábrica.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Ferrule prensado em todos os condutores</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Anilhas conforme o diagrama elétrico</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Conferência ponto a ponto antes do envio</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 31 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g19.jpg" alt="Painel inox para ambiente de lavagem" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Painéis e comando</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Painel inox para ambiente de lavagem</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Painel em aço inox com grau de proteção para lavagem, prensa-cabos vedados, botoeiras seladas e IHM protegida. Solução adequada para indústria alimentícia e ambientes com higienização frequente.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Enclosure inox com vedação adequada</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Prensa-cabos selados em todas as entradas</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Botoeiras e IHM resistentes à lavagem</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Exec 32 -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <img src="assets/g20.jpg" alt="Bloqueio e etiquetagem (LOTO)" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600'">
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary uppercase tracking-wider mb-2">Manutenção industrial</div>
+                        <h3 class="font-display text-xl font-bold text-dark mb-2">Bloqueio e etiquetagem (LOTO)</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Nenhuma intervenção começa sem bloqueio. A chave geral é seccionada, travada com cadeado e etiquetada com identificação do responsável, garantindo que ninguém reenergize o equipamento durante o serviço — exigência da NR-10.</p>
+                        <ul class="text-sm text-dark space-y-1">
+
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Seccionamento e travamento da chave geral</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Etiqueta com identificação do responsável</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Teste de ausência de tensão antes de iniciar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="bg-[#070a0f] border-t border-dark_border py-10">
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-500">
+            <p>&copy; 2026 TecManutenções Engenharia e Automação Industrial LTDA. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
