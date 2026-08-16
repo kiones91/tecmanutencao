@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Wrench, Camera, Mic, Send, X, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Wrench, Camera, Send, X, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 
 interface Midia {
   tipo: 'imagem' | 'video' | 'audio';
@@ -34,10 +36,12 @@ export default function AtendimentoPublico() {
   const [erros, setErros] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const supabase = createClient();
+
   // Validação de WhatsApp em tempo real
   const validarWhatsApp = (valor: string) => {
     const limpo = valor.replace(/\D/g, '');
-    if (limpo.length < 10) return 'WhatsApp inválido';
+    if (limpo.length < 10) return 'WhatsApp inválido (DDD + número)';
     if (limpo.length > 11) return 'WhatsApp muito longo';
     return '';
   };
@@ -49,34 +53,25 @@ export default function AtendimentoPublico() {
     const novasMidias: Midia[] = [];
 
     for (const file of files) {
-      // Validação MIME
       const mimeValido = file.type.startsWith('image/') || 
-                        file.type.startsWith('video/') || 
-                        file.type.startsWith('audio/');
+                         file.type.startsWith('video/') || 
+                         file.type.startsWith('audio/');
       
       if (!mimeValido) {
         novosErros[file.name] = 'Formato não suportado';
         continue;
       }
 
-      // Limite de quantidade
       if (midias.length + novasMidias.length >= LIMITES.MAX_MIDIAS) {
         novosErros[file.name] = `Máximo de ${LIMITES.MAX_MIDIAS} mídias`;
         continue;
       }
 
-      // Limites de tamanho
       if (file.type.startsWith('video/') && file.size > LIMITES.MAX_VIDEO_MB * 1024 * 1024) {
         novosErros[file.name] = `Vídeo deve ter até ${LIMITES.MAX_VIDEO_MB}MB`;
         continue;
       }
 
-      if (file.type.startsWith('audio/')) {
-        // Validação de duração para áudio (placeholder - implementação real requer metadata)
-        // TODO-BUSINESS: Implementar validação de duração de áudio via Web Audio API
-      }
-
-      // Criar preview para imagens
       let preview: string | undefined;
       if (file.type.startsWith('image/')) {
         preview = URL.createObjectURL(file);
@@ -93,13 +88,11 @@ export default function AtendimentoPublico() {
     setErros(novosErros);
     setMidias([...midias, ...novasMidias]);
     
-    // Reset input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
-  // Remover mídia
   const removerMidia = (index: number) => {
     const midia = midias[index];
     if (midia.preview) {
@@ -108,19 +101,16 @@ export default function AtendimentoPublico() {
     setMidias(midias.filter((_, i) => i !== index));
   };
 
-  // Detectar emergência no texto
   const detectarEmergencia = (texto: string): boolean => {
-    const termosEmergencia = ['fumaça', 'choque', 'curto', 'curto-circuito', 'faísca', 'incêndio', 'explosão', 'urgente', 'emergência'];
+    const termosEmergencia = ['fumaça', 'choque', 'curto', 'curto-circuito', 'faísca', 'incêndio', 'explosão', 'urgente', 'emergência', 'parou'];
     return termosEmergencia.some(termo => texto.toLowerCase().includes(termo));
   };
 
-  // Enviar solicitação
   const enviarSolicitacao = async (e: React.FormEvent) => {
     e.preventDefault();
     setEnviando(true);
     setErros({});
 
-    // Validações
     const novosErros: Record<string, string> = {};
     
     if (!nome.trim()) novosErros.nome = 'Nome é obrigatório';
@@ -130,7 +120,7 @@ export default function AtendimentoPublico() {
       if (erroWhatsapp) novosErros.whatsapp = erroWhatsapp;
     }
     if (!descricao.trim()) novosErros.descricao = 'Descrição é obrigatória';
-    if (!consentimento) novosErros.consentimento = 'É necessário concordar com LGPD';
+    if (!consentimento) novosErros.consentimento = 'É necessário concordar com os termos de atendimento';
 
     if (Object.keys(novosErros).length > 0) {
       setErros(novosErros);
@@ -139,32 +129,56 @@ export default function AtendimentoPublico() {
     }
 
     try {
-      // Simular chamada à edge function (implementação real abaixo)
       const emergencia = detectarEmergencia(descricao);
-      
-      // Fluxo de mensagens do chat
+      const whatsappLimpo = whatsapp.replace(/\D/g, '');
+
+      // 1. Enviar para a API de captura de leads
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome: nome.trim(),
+          whatsapp,
+          descricao: descricao.trim(),
+          emergencia,
+          midiasCount: midias.length,
+        }),
+      });
+
+      const resData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(resData.error || 'Falha ao registrar lead');
+      }
+
+      // 2. Upload de mídias para Storage (se houver bucket disponível)
+      if (resData.lead?.id && midias.length > 0) {
+        for (const m of midias) {
+          try {
+            const fileName = `${resData.lead.id}/${Date.now()}_${m.file.name.replace(/\s+/g, '_')}`;
+            await supabase.storage
+              .from('temp-public')
+              .upload(fileName, m.file, { upsert: true });
+          } catch (storageErr) {
+            console.warn('Bucket de storage não configurado ou erro no upload:', storageErr);
+          }
+        }
+      }
+
       const mensagemInicial: MensagemChat = {
         id: crypto.randomUUID(),
         remetente: 'sistema',
         texto: emergencia 
-          ? '⚠️ Situação de emergência detectada! Desligue o equipamento da rede elétrica imediatamente e afaste-se. Nossa equipe priorizará seu atendimento.'
-          : 'Recebido! Nossa equipe técnica analisa e envia o orçamento no seu WhatsApp.',
+          ? '⚠️ Situação de emergência detectada! Desligue o equipamento da rede elétrica imediatamente e afaste-se. Nossa equipe técnica foi notificada e priorizará seu contato imediato.'
+          : 'Recebido! Nossa equipe técnica analisa sua solicitação e entra em contato via WhatsApp.',
         tipo: emergencia ? 'emergencia' : 'sucesso',
       };
 
       setMensagens([mensagemInicial]);
-      
-      // TODO: Chamar edge function fn-lead-capture com payload completo
-      // const response = await fetch('https://xxx.supabase.co/functions/v1/lead-capture', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ nome, whatsapp, descricao, midias: [], emergencia }),
-      // });
-
       setEnviado(true);
     } catch (error) {
-      console.error('Erro ao enviar:', error);
-      setErros({ geral: 'Erro ao enviar. Tente novamente.' });
+      console.error('Erro ao enviar solicitação:', error);
+      setErros({ geral: 'Ocorreu um erro ao processar seu pedido. Tente novamente.' });
     } finally {
       setEnviando(false);
     }
@@ -173,20 +187,37 @@ export default function AtendimentoPublico() {
   if (enviado) {
     return (
       <div className="min-h-screen bg-[#0a0d14] text-[#f8fafc] flex items-center justify-center p-4">
-        <div className="bg-[#161c2c] rounded-2xl p-8 border border-[#232b3e] max-w-md w-full text-center">
-          <CheckCircle className="h-16 w-16 text-[#fcdc5d] mx-auto mb-4" />
-          <h2 className="text-2xl font-bold font-outfit mb-2">Solicitação Recebida!</h2>
-          <p className="text-[#94a3b8] mb-6">
+        <div className="bg-[#161c2c] rounded-2xl p-8 border border-[#232b3e] max-w-md w-full text-center shadow-2xl">
+          <div className="w-16 h-16 rounded-full bg-[#fcdc5d]/10 border border-[#fcdc5d]/30 flex items-center justify-center mx-auto mb-4">
+            <CheckCircle className="h-9 w-9 text-[#fcdc5d]" />
+          </div>
+          <h2 className="text-2xl font-bold font-outfit mb-2 text-white">Solicitação Registrada!</h2>
+          <p className="text-[#94a3b8] text-sm leading-relaxed mb-6">
             {mensagens[0]?.tipo === 'emergencia' 
-              ? 'Priorizamos emergências. Você será contactado em até 1 hora.'
-              : 'Nossa equipe técnica analisa e envia o orçamento no seu WhatsApp.'}
+              ? 'Priorizamos emergências industriais. Nossa equipe entrará em contato em minutos.'
+              : 'Recebido com sucesso! Nossa equipe técnica analisa e envia o orçamento no seu WhatsApp.'}
           </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="bg-[#fcdc5d] hover:bg-[#f5cb3c] text-[#0a0d14] font-semibold py-3 px-6 rounded-xl transition-all"
-          >
-            Nova Solicitação
-          </button>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => {
+                setEnviado(false);
+                setNome('');
+                setWhatsapp('');
+                setDescricao('');
+                setMidias([]);
+                setConsentimento(false);
+              }}
+              className="w-full bg-[#fcdc5d] hover:bg-[#f5cb3c] text-[#0a0d14] font-bold py-3 px-6 rounded-xl transition-all shadow-md"
+            >
+              Nova Solicitação
+            </button>
+            <Link
+              href="/"
+              className="text-xs text-[#94a3b8] hover:text-white transition-colors py-2"
+            >
+              Voltar ao Início
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -196,180 +227,179 @@ export default function AtendimentoPublico() {
     <div className="min-h-screen bg-[#0a0d14] text-[#f8fafc]">
       {/* Header */}
       <header className="border-b border-[#232b3e] bg-[#111622]">
-        <div className="container mx-auto px-4 py-4 flex items-center gap-3">
-          <Wrench className="h-6 w-6 text-[#fcdc5d]" />
-          <div>
-            <h1 className="text-xl font-bold font-outfit">TecManutenções</h1>
-            <p className="text-xs text-[#94a3b8]">Atendimento Online - Faísca</p>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#fcdc5d]/10 border border-[#fcdc5d]/30 flex items-center justify-center">
+              <Wrench className="h-5 w-5 text-[#fcdc5d]" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold font-outfit text-white">TecManutenções</h1>
+              <p className="text-xs text-[#94a3b8]">Atendimento Técnico Inteligente — Faísca</p>
+            </div>
           </div>
+          <Link
+            href="/login"
+            className="text-xs font-medium text-[#94a3b8] hover:text-[#fcdc5d] transition-colors border border-[#232b3e] px-3 py-1.5 rounded-lg bg-[#161c2c]"
+          >
+            Área Restrita
+          </Link>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         <section className="mb-8 text-center">
-          <h2 className="text-2xl font-bold font-outfit mb-2">Precisa de atendimento técnico?</h2>
-          <p className="text-[#94a3b8]">Descreva seu problema e nossa equipe técnica analisará seu caso</p>
+          <h2 className="text-2xl sm:text-3xl font-bold font-outfit mb-2 text-white">
+            Precisa de atendimento técnico?
+          </h2>
+          <p className="text-[#94a3b8] text-sm">
+            Descreva seu problema elétrico ou industrial e nossa engenharia avaliará imediatamente.
+          </p>
         </section>
 
-        {/* Chat Messages */}
-        {mensagens.length > 0 && (
-          <div className="mb-6 space-y-3">
-            {mensagens.map((msg) => (
-              <div
-                key={msg.id}
-                className={`p-4 rounded-xl border ${
-                  msg.tipo === 'emergencia'
-                    ? 'bg-red-900/20 border-red-700/50'
-                    : msg.tipo === 'sucesso'
-                    ? 'bg-green-900/20 border-green-700/50'
-                    : 'bg-[#111622] border-[#232b3e]'
-                }`}
-              >
-                <p className={msg.tipo === 'emergencia' ? 'text-red-400' : ''}>{msg.texto}</p>
-              </div>
-            ))}
+        {/* Global Error */}
+        {erros.geral && (
+          <div className="mb-6 p-4 rounded-xl bg-red-950/40 border border-red-800/60 flex items-center gap-3 text-red-300 text-sm">
+            <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
+            <span>{erros.geral}</span>
           </div>
         )}
 
         {/* Form */}
-        <div className="bg-[#161c2c] rounded-2xl p-6 border border-[#232b3e]">
-          <form onSubmit={enviarSolicitacao} className="space-y-6">
-            {/* Nome */}
-            <div>
-              <label className="block text-sm text-[#94a3b8] mb-2">Nome completo</label>
-              <input 
-                type="text" 
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                placeholder="Seu nome"
-                className={`w-full bg-[#111622] border rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d] min-h-[48px] ${
-                  erros.nome ? 'border-red-500' : 'border-[#232b3e]'
-                }`}
-              />
-              {erros.nome && <p className="text-xs text-red-400 mt-1">{erros.nome}</p>}
-            </div>
+        <form onSubmit={enviarSolicitacao} className="bg-[#161c2c] rounded-2xl p-6 sm:p-8 border border-[#232b3e] shadow-xl space-y-6">
+          {/* Nome */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#94a3b8] mb-2">
+              Seu Nome ou Empresa *
+            </label>
+            <input
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              placeholder="Ex: João Silva ou Metalúrgica Brasil"
+              className="w-full px-4 py-3 bg-[#111622] border border-[#232b3e] rounded-xl text-white placeholder-[#94a3b8]/40 focus:outline-none focus:border-[#fcdc5d] transition-colors"
+            />
+            {erros.nome && <p className="text-red-400 text-xs mt-1.5">{erros.nome}</p>}
+          </div>
 
-            {/* WhatsApp */}
-            <div>
-              <label className="block text-sm text-[#94a3b8] mb-2">WhatsApp</label>
-              <input 
-                type="tel" 
-                value={whatsapp}
-                onChange={(e) => setWhatsapp(e.target.value)}
-                placeholder="(XX) XXXXX-XXXX"
-                className={`w-full bg-[#111622] border rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d] min-h-[48px] ${
-                  erros.whatsapp ? 'border-red-500' : 'border-[#232b3e]'
-                }`}
-              />
-              {erros.whatsapp && <p className="text-xs text-red-400 mt-1">{erros.whatsapp}</p>}
-            </div>
+          {/* WhatsApp */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#94a3b8] mb-2">
+              WhatsApp para Retorno *
+            </label>
+            <input
+              type="tel"
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              placeholder="Ex: 19999998888"
+              className="w-full px-4 py-3 bg-[#111622] border border-[#232b3e] rounded-xl text-white placeholder-[#94a3b8]/40 focus:outline-none focus:border-[#fcdc5d] transition-colors"
+            />
+            {erros.whatsapp && <p className="text-red-400 text-xs mt-1.5">{erros.whatsapp}</p>}
+          </div>
 
-            {/* Descrição */}
-            <div>
-              <label className="block text-sm text-[#94a3b8] mb-2">Descreva o problema</label>
-              <textarea 
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
-                rows={4}
-                placeholder="Conte o que está acontecendo com seu equipamento..."
-                className={`w-full bg-[#111622] border rounded-xl px-4 py-3 text-[#f8fafc] focus:outline-none focus:border-[#fcdc5d] resize-none ${
-                  erros.descricao ? 'border-red-500' : 'border-[#232b3e]'
-                }`}
-              />
-              {erros.descricao && <p className="text-xs text-red-400 mt-1">{erros.descricao}</p>}
-            </div>
+          {/* Descrição */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#94a3b8] mb-2">
+              Descreva o Problema / Serviço Necessário *
+            </label>
+            <textarea
+              rows={4}
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+              placeholder="Ex: Painel desarmando em carga, necessidade de adequação NR12 em prensa, montagem de infraestrutura..."
+              className="w-full px-4 py-3 bg-[#111622] border border-[#232b3e] rounded-xl text-white placeholder-[#94a3b8]/40 focus:outline-none focus:border-[#fcdc5d] transition-colors resize-none"
+            />
+            {erros.descricao && <p className="text-red-400 text-xs mt-1.5">{erros.descricao}</p>}
+          </div>
 
-            {/* Upload de Mídias */}
-            <div>
-              <label className="block text-sm text-[#94a3b8] mb-2">Adicione fotos ou vídeos (opcional)</label>
-              <div className="grid grid-cols-3 gap-3">
-                {midias.map((midia, index) => (
-                  <div key={index} className="relative aspect-square">
-                    {midia.preview && (
-                      <img src={midia.preview} alt="Preview" className="w-full h-full object-cover rounded-xl" />
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => removerMidia(index)}
-                      className="absolute top-1 right-1 bg-red-600 rounded-full p-1 hover:bg-red-700"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-                {midias.length < LIMITES.MAX_MIDIAS && (
-                  <button 
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="aspect-square bg-[#111622] border-2 border-dashed border-[#232b3e] rounded-xl flex flex-col items-center justify-center gap-2 hover:border-[#fcdc5d] transition-colors min-h-[48px]"
-                  >
-                    <Camera className="h-6 w-6 text-[#94a3b8]" />
-                    <span className="text-xs text-[#94a3b8]">Foto/Vídeo</span>
-                  </button>
-                )}
-              </div>
+          {/* Upload de Mídias */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#94a3b8] mb-2">
+              Fotos ou Vídeos do Local / Painel (Opcional, até 3)
+            </label>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={midias.length >= LIMITES.MAX_MIDIAS}
+                className="flex items-center gap-2 px-4 py-2.5 bg-[#111622] hover:bg-[#1f283d] border border-[#232b3e] rounded-xl text-sm text-[#94a3b8] hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Camera className="w-4 h-4 text-[#fcdc5d]" />
+                <span>Adicionar Arquivo</span>
+              </button>
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*,video/*,audio/*"
                 multiple
+                accept="image/*,video/*,audio/*"
                 onChange={adicionarMidia}
                 className="hidden"
               />
-              <p className="text-xs text-[#94a3b8] mt-2">
-                Máximo {LIMITES.MAX_MIDIAS} mídias • Vídeo até {LIMITES.MAX_VIDEO_MB}MB • Áudio até {LIMITES.MAX_AUDIO_MIN}min
-              </p>
-              {Object.keys(erros).some(k => k.endsWith('.mp4') || k.endsWith('.jpg')) && (
-                <div className="mt-2 space-y-1">
-                  {Object.entries(erros).map(([k, v]) => (
-                    <p key={k} className="text-xs text-red-400">{k}: {v}</p>
-                  ))}
-                </div>
-              )}
+              <span className="text-xs text-[#94a3b8]">
+                {midias.length}/{LIMITES.MAX_MIDIAS} selecionados
+              </span>
             </div>
 
-            {/* Consentimento LGPD */}
-            <div className="flex items-start gap-3 pt-4 border-t border-[#232b3e]">
-              <input 
-                type="checkbox" 
-                id="lgpd"
+            {/* Preview de Mídias */}
+            {midias.length > 0 && (
+              <div className="grid grid-cols-3 gap-3 mt-3">
+                {midias.map((m, idx) => (
+                  <div key={idx} className="relative rounded-xl overflow-hidden border border-[#232b3e] bg-[#111622] aspect-video flex items-center justify-center group">
+                    {m.preview ? (
+                      <img src={m.preview} alt="Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-xs text-[#94a3b8] uppercase font-mono">{m.tipo}</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removerMidia(idx)}
+                      className="absolute top-1 right-1 p-1 bg-black/70 hover:bg-red-600 rounded-full text-white transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* LGPD Consent */}
+          <div className="pt-2 border-t border-[#232b3e]">
+            <label className="flex items-start gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
                 checked={consentimento}
                 onChange={(e) => setConsentimento(e.target.checked)}
-                className="mt-1 w-4 h-4 rounded border-[#232b3e] bg-[#111622] text-[#fcdc5d] focus:ring-[#fcdc5d]"
+                className="mt-1 w-4 h-4 rounded border-[#232b3e] bg-[#111622] text-[#fcdc5d] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#fcdc5d]"
               />
-              <label htmlFor="lgpd" className="text-sm text-[#94a3b8]">
-                Concordo com o processamento dos meus dados para fins de orçamento e atendimento técnico. 
-                Seus dados serão retidos por 5 anos conforme LGPD.
-              </label>
-            </div>
-            {erros.consentimento && <p className="text-xs text-red-400">{erros.consentimento}</p>}
-            {erros.geral && <p className="text-xs text-red-400">{erros.geral}</p>}
+              <span className="text-xs text-[#94a3b8] leading-relaxed">
+                Concordo com o envio dos meus dados para contato técnico e elaboração de proposta comercial conforme a LGPD.
+              </span>
+            </label>
+            {erros.consentimento && (
+              <p className="text-red-400 text-xs mt-1.5">{erros.consentimento}</p>
+            )}
+          </div>
 
-            {/* Submit */}
-            <button 
-              type="submit"
-              disabled={enviando}
-              className="w-full bg-[#fcdc5d] hover:bg-[#f5cb3c] disabled:bg-[#94a3b8] text-[#0a0d14] font-semibold py-4 px-6 rounded-xl transition-all drop-shadow-[0_0_15px_rgba(252,220,93,0.3)] flex items-center justify-center gap-2 min-h-[48px]"
-            >
-              {enviando ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Enviando...
-                </>
-              ) : (
-                <>
-                  <Send className="h-5 w-5" />
-                  Enviar Solicitação
-                </>
-              )}
-            </button>
-
-            <p className="text-xs text-center text-[#94a3b8]">
-              Nossa equipe técnica analisa e envia o orçamento no seu WhatsApp.
-            </p>
-          </form>
-        </div>
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={enviando}
+            className="w-full py-4 px-6 bg-[#fcdc5d] hover:bg-[#f5cb3c] text-[#0a0d14] font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#fcdc5d]/10 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {enviando ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Registrando Solicitação...</span>
+              </>
+            ) : (
+              <>
+                <Send className="w-5 h-5" />
+                <span>Solicitar Atendimento Técnico</span>
+              </>
+            )}
+          </button>
+        </form>
       </main>
     </div>
   );
