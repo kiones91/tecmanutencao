@@ -255,18 +255,18 @@ function LoginForm() {
         {/* Heading */}
         <div className="mt-6 text-center">
           <h1 className="text-[22px] leading-tight tracking-tight font-semibold text-neutral-50">
-            {mode === 'login' ? 'Sign in to NeonGrid' : 'Recuperar Senha'}
+            {mode === 'login' ? 'Faça login no NeonGrid' : 'Recuperar Senha'}
           </h1>
           <p className="mt-2 text-sm font-normal text-neutral-400">
             {mode === 'login' ? (
               <>
-                TecManutenções ERP.{' '}
+                É novo na plataforma?{' '}
                 <button
                   type="button"
                   onClick={() => { setMode('reset'); setError(null); setResetSuccess(null); }}
                   className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
                 >
-                  Esqueceu a senha?
+                  Crie uma conta
                 </button>
               </>
             ) : (
@@ -303,7 +303,7 @@ function LoginForm() {
             {/* Work email */}
             <div className="space-y-2">
               <label htmlFor="email" className="block text-xs font-medium uppercase tracking-[0.16em] text-neutral-400">
-                Work email
+                E-mail de trabalho
               </label>
               <div className="flex items-center rounded-xl border border-neutral-800 bg-neutral-950/60 px-3 py-2.5 text-sm text-neutral-100 shadow-inner shadow-black/40 focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500/70 transition-all">
                 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="16" height="16" viewBox="0 0 24 24" className="h-4 w-4 text-neutral-500 shrink-0">
@@ -317,7 +317,7 @@ function LoginForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="kiones91@gmail.com"
+                  placeholder="você@studio.dev"
                   className="ml-3 flex-1 bg-transparent text-sm font-normal text-neutral-100 placeholder:text-neutral-600 focus:outline-none"
                 />
               </div>
@@ -327,14 +327,14 @@ function LoginForm() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label htmlFor="password" className="block text-xs font-medium uppercase tracking-[0.16em] text-neutral-400">
-                  Password
+                  Senha
                 </label>
                 <button
                   type="button"
                   onClick={() => { setMode('reset'); setError(null); setResetSuccess(null); }}
                   className="text-xs font-medium text-neutral-400 hover:text-neutral-100 transition-colors"
                 >
-                  Forgot?
+                  Esquecido?
                 </button>
               </div>
               <div className="flex shadow-black/40 focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500/70 text-sm text-neutral-100 bg-neutral-950/60 border-neutral-800 border rounded-xl pt-2.5 pr-3 pb-2.5 pl-3 shadow-inner items-center transition-all">
@@ -348,7 +348,7 @@ function LoginForm() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  placeholder="Digite sua senha"
                   className="ml-3 flex-1 bg-transparent text-sm font-normal text-neutral-100 placeholder:text-neutral-600 focus:outline-none font-mono"
                 />
                 <button
@@ -356,7 +356,7 @@ function LoginForm() {
                   onClick={() => setShowPass(!showPass)}
                   className="ml-2 rounded-full px-2 py-1 text-[11px] font-medium text-neutral-400 hover:bg-neutral-800/80 hover:text-neutral-100 transition"
                 >
-                  {showPass ? 'Hide' : 'Show'}
+                  {showPass ? 'Ocultar' : 'Mostrar'}
                 </button>
               </div>
             </div>
@@ -373,17 +373,17 @@ function LoginForm() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
                   </svg>
-                  Authenticating...
+                  Autenticando...
                 </span>
               ) : (
-                'Continue to dashboard'
+                'Continuar para o painel de controle'
               )}
             </button>
 
             {/* Divider */}
             <div className="flex items-center gap-4 text-xs text-neutral-500">
               <div className="h-px flex-1 bg-neutral-800/80"></div>
-              <span className="font-medium">OR</span>
+              <span className="font-medium">OU</span>
               <div className="h-px flex-1 bg-neutral-800/80"></div>
             </div>
 
@@ -431,15 +431,15 @@ function LoginForm() {
             </div>
 
             {/* Subtext */}
-            <p className="pt-1 text-[11px] leading-relaxed text-neutral-500 text-center">
-              By continuing, you agree to the TecManutenções{' '}
+            <p className="pt-1 text-[11px] leading-relaxed text-neutral-500">
+              Ao continuar, você concorda com os{' '}
               <a href="#" className="font-medium text-neutral-200 hover:text-emerald-400 transition-colors">
-                Terms
+                Termos
               </a>{' '}
-              and{' '}
+              e a{' '}
               <a href="#" className="font-medium text-neutral-200 hover:text-emerald-400 transition-colors">
-                Privacy Policy
-              </a>.
+                Política de Privacidade
+              </a>{' '}da NeonGrid.
             </p>
           </form>
         ) : (
