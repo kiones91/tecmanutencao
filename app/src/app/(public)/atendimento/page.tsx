@@ -2,17 +2,36 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { 
-  Wrench, Send, Bot, User, ShieldAlert, CheckCircle2, 
-  Sparkles, Clock, ArrowLeft, Phone, Factory, Cpu, Zap, Shield, AlertTriangle
+import {
+  Wrench,
+  Send,
+  Bot,
+  User,
+  ShieldAlert,
+  CheckCircle2,
+  Sparkles,
+  Clock,
+  ArrowLeft,
+  Phone,
+  Factory,
+  Cpu,
+  Zap,
+  Shield,
+  AlertTriangle,
+  MessageSquare,
+  ChevronRight,
+  ExternalLink,
+  Loader2,
+  HardHat,
 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 interface MensagemChat {
   id: string;
   remetente: 'ia' | 'usuario';
   texto: string;
   timestamp: string;
-  opcoesRapidas?: { rotulo: string; valor: string; icone?: any }[];
+  opcoesRapidas?: { rotulo: string; valor: string; icone?: string }[];
   resumoPedido?: {
     protocolo: string;
     servico: string;
@@ -31,14 +50,15 @@ export default function AtendimentoIAPage() {
     {
       id: '1',
       remetente: 'ia',
-      texto: 'Olá! Sou o **Faísca**, Engenheiro Assistente da **TecManutenções** ⚡\n\nEstou aqui para entender o seu caso técnico e agilizar o seu orçamento ou atendimento de emergência. Qual é a sua necessidade principal hoje?',
+      texto:
+        'Olá! Sou o **Faísca ⚡**, Engenheiro Assistente da **TecManutenções**.\n\nEstou aqui para realizar a triagem técnica do seu equipamento industrial e agilizar seu orçamento ou atendimento emergencial de campo. Como posso ajudar sua fábrica hoje?',
       timestamp: 'Agora',
       opcoesRapidas: [
         { rotulo: '🚨 Máquina Parada / Emergência', valor: 'Emergência: Linha/Máquina Parada' },
-        { rotulo: '🛡️ Adequação NR-12 Turnkey', valor: 'Adequação NR-12 com ART' },
-        { rotulo: '⚡ Automação & Retrofit', valor: 'Automação & Retrofit de Máquinas' },
+        { rotulo: '🛡️ Adequação NR-12 com ART', valor: 'Adequação NR-12 com Laudo e ART' },
+        { rotulo: '⚡ Automação & Retrofit CLP', valor: 'Automação & Retrofit de Máquinas' },
         { rotulo: '🏭 Parada Programada / QGBT', valor: 'Parada Programada de Manutenção' },
-        { rotulo: '📋 Contrato Mensal / Preventiva', valor: 'Contrato de Manutenção Preventiva' },
+        { rotulo: '📋 Contrato Preventivo Mensal', valor: 'Contrato de Manutenção Preventiva' },
       ],
     },
   ]);
@@ -57,7 +77,10 @@ export default function AtendimentoIAPage() {
     urgencia: 'normal',
   });
   const [isDigitando, setIsDigitando] = useState(false);
+  const [enviandoLead, setEnviandoLead] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const supabase = createClient();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -77,7 +100,11 @@ export default function AtendimentoIAPage() {
     setMensagens((prev) => [...prev, novaMsg]);
   };
 
-  const responderIA = (respostaTexto: string, opcoes?: { rotulo: string; valor: string }[], resumo?: any) => {
+  const responderIA = (
+    respostaTexto: string,
+    opcoes?: { rotulo: string; valor: string }[],
+    resumo?: any
+  ) => {
     setIsDigitando(true);
     setTimeout(() => {
       setIsDigitando(false);
@@ -92,7 +119,7 @@ export default function AtendimentoIAPage() {
           resumoPedido: resumo,
         },
       ]);
-    }, 900);
+    }, 850);
   };
 
   const handleOpcaoRapida = (valor: string) => {
@@ -111,8 +138,11 @@ export default function AtendimentoIAPage() {
     adicionarMensagemUsuario(texto);
 
     if (etapa === 1) {
-      // Coletou o tipo de serviço
-      const isEmergencia = texto.toLowerCase().includes('emergência') || texto.toLowerCase().includes('parada');
+      const isEmergencia =
+        texto.toLowerCase().includes('emergência') ||
+        texto.toLowerCase().includes('parada') ||
+        texto.toLowerCase().includes('parou');
+
       setDadosColetados((prev) => ({
         ...prev,
         servico: texto,
@@ -122,247 +152,281 @@ export default function AtendimentoIAPage() {
 
       responderIA(
         isEmergencia
-          ? '⚠️ **Entendido! Caso de alta prioridade.** Qual é o equipamento ou máquina que está apresentando a falha (ex: Prensa, Extrusora, Ponte Rolante, Painel QGBT)?'
-          : 'Excelente. Qual é o equipamento, máquina ou setor industrial envolvido nesse projeto?',
+          ? '🚨 **CASO DE EMERGÊNCIA IDENTIFICADO!**\n\nNossa equipe de plantão 24h já foi alertada. Qual é o equipamento industrial que está inoperante no momento?'
+          : 'Excelente. Qual é o equipamento, painel ou linha fabril envolvida neste projeto?',
         [
           { rotulo: 'Prensa Hidráulica / Excêntrica', valor: 'Prensa Hidráulica / Excêntrica' },
-          { rotulo: 'Ponte Rolante / Talha', valor: 'Ponte Rolante / Talha' },
-          { rotulo: 'Painel Elétrico / QGBT', valor: 'Painel Elétrico / Subestação / QGBT' },
-          { rotulo: 'Linha de Envase / Produção', valor: 'Linha de Envase / Produção Contínua' },
-          { rotulo: 'Outro Equipamento', valor: 'Outro Equipamento Fabril' },
+          { rotulo: 'Ponte Rolante / Talha', valor: 'Ponte Rolante / Talha Industrial' },
+          { rotulo: 'Painel QGBT / Subestação', valor: 'Painel Elétrico / Subestação / QGBT' },
+          { rotulo: 'Linha Contínua / Envase', valor: 'Linha Contínua de Produção / Envase' },
+          { rotulo: 'Centro de Usinagem / CNC', valor: 'Torno CNC / Centro de Usinagem' },
+          { rotulo: 'Outro Equipamento', valor: 'Outro Equipamento Industrial' },
         ]
       );
     } else if (etapa === 2) {
-      // Coletou o equipamento
       setDadosColetados((prev) => ({ ...prev, maquina: texto }));
       setEtapa(3);
 
       responderIA(
-        'Perfeito. Qual é o nível de tensão elétrica da sua fábrica e qual o principal sintoma ou escopo desejado?',
+        'Anotado. Qual é a tensão elétrica da fábrica e o principal sintoma ou escopo necessário?',
         [
           { rotulo: '220V Trifásico', valor: '220V Trifásico' },
           { rotulo: '380V Trifásico', valor: '380V Trifásico' },
           { rotulo: '440V Industrial', valor: '440V Industrial' },
-          { rotulo: 'Média Tensão / Cabine', valor: 'Média Tensão / Cabine Primária' },
+          { rotulo: 'Cabine / Média Tensão', valor: 'Média Tensão / Cabine Primária' },
         ]
       );
     } else if (etapa === 3) {
-      // Coletou tensão / sintomas
-      setDadosColetados((prev) => ({ ...prev, tensao: texto, sintomas: texto }));
+      setDadosColetados((prev) => ({ ...prev, tensao: texto }));
       setEtapa(4);
 
       responderIA(
-        'Anotado! Agora, para registrarmos o chamado técnico no painel e enviarmos um especialista, qual o **Nome da sua Empresa** e a **Cidade** onde fica a fábrica?'
+        'Perfeito. Para localizarmos a equipe mais próxima e calcular o deslocamento técnico: qual é a **Cidade / Estado** e o **Nome da Empresa**?'
       );
     } else if (etapa === 4) {
-      // Coletou empresa e cidade
-      setDadosColetados((prev) => ({ ...prev, empresa: texto, cidade: texto }));
+      setDadosColetados((prev) => ({
+        ...prev,
+        empresa: texto,
+        cidade: texto,
+      }));
       setEtapa(5);
 
       responderIA(
-        'Ótimo! Por favor, qual é o seu **Nome Completo** e o **WhatsApp com DDD** para contato imediato do nosso time de engenharia?'
+        'Ótimo. Por fim, por favor informe seu **Nome de Contato** e **WhatsApp com DDD** para envio da proposta e contato do engenheiro responsável.'
       );
     } else if (etapa === 5) {
-      // Coletou nome e WhatsApp -> Finalizar e salvar no Supabase!
-      const contatoInfo = texto;
-      const novoDados = {
+      const protocolo = `TEC-${Math.floor(100000 + Math.random() * 900000)}`;
+      const dadosFinais = {
         ...dadosColetados,
-        contato_nome: contatoInfo,
-        whatsapp: contatoInfo,
+        contato_nome: texto,
+        whatsapp: texto,
       };
-      setDadosColetados(novoDados);
+      setDadosColetados(dadosFinais);
       setEtapa(6);
+      setEnviandoLead(true);
 
-      const protocolo = `TEC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-
-      // Salva no backend
+      // Salvar Lead no Supabase
       try {
-        await fetch('/api/leads', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            nome: novoDados.contato_nome || 'Cliente Chat IA',
-            empresa: novoDados.empresa || 'Empresa Informada no Chat',
-            telefone: novoDados.whatsapp || '',
-            origem: 'chat_ia_faisca',
-            categoria: novoDados.urgencia === 'critica' ? 'urgente' : 'industrial',
-            descricao_problema: `[Atendimento IA] Serviço: ${novoDados.servico} | Equipamento: ${novoDados.maquina} | Tensão: ${novoDados.tensao} | Local: ${novoDados.empresa}`,
-          }),
-        });
+        await supabase.from('leads').insert([
+          {
+            nome: texto,
+            whatsapp: texto,
+            origem: 'atendimento_ia',
+            status: 'novo',
+            score: dadosFinais.urgencia === 'critica' ? 95 : 75,
+            payload_ia: {
+              protocolo,
+              servico: dadosFinais.servico,
+              maquina: dadosFinais.maquina,
+              tensao: dadosFinais.tensao,
+              empresa: dadosFinais.empresa,
+              cidade: dadosFinais.cidade,
+              urgencia: dadosFinais.urgencia,
+              resumo: `Protocolo ${protocolo}: ${dadosFinais.servico} em ${dadosFinais.maquina} (${dadosFinais.tensao}). Solicitante: ${texto}.`,
+            },
+          },
+        ]);
       } catch (err) {
-        console.error('Erro ao registrar lead:', err);
+        console.error('Erro ao sincronizar lead:', err);
+      } finally {
+        setEnviandoLead(false);
       }
 
       responderIA(
-        `✅ **Pedido Técnico Registrado com Sucesso!**\n\nNosso time técnico e os engenheiros responsáveis já foram notificados em tempo real no painel.\n\nVocê também pode iniciar uma conversa direta no WhatsApp agora mesmo com o resumo técnico já preenchido:`,
+        `✅ **Triagem Concluída com Sucesso!**\n\nSeu protocolo técnico é **${protocolo}**. O relatório foi gerado e nossos engenheiros já receberam os detalhes do seu chamado.`,
         undefined,
         {
           protocolo,
-          servico: novoDados.servico,
-          maquina: novoDados.maquina,
-          tensao: novoDados.tensao,
-          empresa: novoDados.empresa,
-          cidade: novoDados.cidade,
-          contato: novoDados.contato_nome,
-          whatsapp: novoDados.whatsapp,
-          urgencia: novoDados.urgencia,
+          servico: dadosFinais.servico,
+          maquina: dadosFinais.maquina,
+          tensao: dadosFinais.tensao,
+          empresa: dadosFinais.empresa,
+          cidade: dadosFinais.cidade,
+          contato: texto,
+          whatsapp: texto,
+          urgencia: dadosFinais.urgencia,
         }
       );
     }
   };
 
+  const getWhatsAppLink = (resumo: any) => {
+    const textoZap = `Olá Engenharia TecManutenções!%0A%0A*PROTOCOLO TÉCNICO:* ${resumo.protocolo}%0A*SERVIÇO:* ${resumo.servico}%0A*EQUIPAMENTO:* ${resumo.maquina}%0A*TENSÃO:* ${resumo.tensao}%0A*LOCAL/EMPRESA:* ${resumo.empresa}%0A*SOLICITANTE:* ${resumo.contato}%0A*PRIORIDADE:* ${resumo.urgencia === 'critica' ? 'EMERGÊNCIA (MÁQUINA PARADA)' : 'NORMAL'}`;
+    return `https://wa.me/5519983808498?text=${textoZap}`;
+  };
+
   return (
-    <div className="min-h-screen bg-[#0a0d14] text-[#f8fafc] flex flex-col">
-      {/* Header do Chat */}
-      <header className="border-b border-[#232b3e] bg-[#111622] sticky top-0 z-30 shadow-md">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div className="min-h-screen bg-[#05080a] text-white flex flex-col lumimotion-grid">
+      {/* Top Cyber Assistant Header */}
+      <header className="sticky top-0 z-30 border-b border-[#232d42]/80 bg-[#0a0e17]/95 backdrop-blur-xl">
+        <div className="w-full max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          {/* Back & Assistant Status */}
           <div className="flex items-center gap-3">
             <Link
-              href="/"
-              className="p-2 rounded-xl bg-[#161c2c] hover:bg-[#1f283d] border border-[#232b3e] text-[#94a3b8] hover:text-white transition-colors"
+              href="/admin"
+              className="p-2 rounded-xl bg-[#121824] border border-[#232d42] text-slate-300 hover:text-white transition-all flex items-center justify-center"
+              title="Voltar ao Painel"
             >
               <ArrowLeft className="w-4 h-4" />
             </Link>
-            <div className="relative">
-              <div className="w-10 h-10 rounded-full bg-[#fcdc5d]/10 border border-[#fcdc5d]/30 flex items-center justify-center text-[#fcdc5d]">
-                <Bot className="w-5 h-5" />
+
+            <div className="flex items-center gap-2.5">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-xl bg-[#131a29] border border-[#2b3952] flex items-center justify-center shadow-[0_0_15px_rgba(252,220,93,0.15)]">
+                  <Zap className="w-5 h-5 text-[#fcdc5d]" />
+                </div>
+                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#0a0e17] shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse"></span>
               </div>
-              <span className="w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#111622] absolute bottom-0 right-0"></span>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-sm font-bold font-outfit text-white">Faísca IA</h1>
-                <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                  Online
-                </span>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <h1 className="text-sm sm:text-base font-bold font-outfit text-white">
+                    Engenheiro Faísca
+                  </h1>
+                  <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-[#fcdc5d]/10 text-[#fcdc5d] border border-[#fcdc5d]/30">
+                    IA 24h
+                  </span>
+                </div>
+                <p className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
+                  <span>TecManutenções Industrial • Online</span>
+                </p>
               </div>
-              <p className="text-[11px] text-[#94a3b8]">Especialista Técnico TecManutenções</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Link
-              href="/login"
-              className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-[#161c2c] hover:bg-[#1f283d] border border-[#232b3e] text-[#94a3b8] hover:text-white"
-            >
-              Área do Sócio
-            </Link>
-          </div>
+          {/* Plantão WhatsApp CTA */}
+          <a
+            href="https://wa.me/5519983808498"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-neutral-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all active:scale-95"
+          >
+            <Phone className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Plantão WhatsApp</span>
+            <span className="sm:hidden">Plantão</span>
+          </a>
         </div>
       </header>
 
-      {/* Corpo do Chat */}
-      <main className="flex-1 max-w-4xl w-full mx-auto p-4 flex flex-col justify-between">
-        {/* Mensagens */}
-        <div className="space-y-4 pb-4 overflow-y-auto">
+      {/* Main Chat Stream Container */}
+      <main className="flex-1 w-full max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex flex-col justify-between">
+        {/* Messages Stream */}
+        <div className="space-y-4 pb-4">
           {mensagens.map((msg) => {
             const isIA = msg.remetente === 'ia';
-
             return (
               <div
                 key={msg.id}
-                className={`flex gap-3 ${isIA ? 'justify-start' : 'justify-end'}`}
+                className={`flex gap-2.5 sm:gap-3.5 max-w-2xl ${
+                  isIA ? 'mr-auto' : 'ml-auto flex-row-reverse'
+                } animate-in fade-in slide-in-from-bottom-2 duration-300`}
               >
-                {isIA && (
-                  <div className="w-8 h-8 rounded-full bg-[#fcdc5d]/10 border border-[#fcdc5d]/30 flex items-center justify-center text-[#fcdc5d] shrink-0 mt-1">
-                    <Bot className="w-4 h-4" />
-                  </div>
-                )}
+                {/* Avatar */}
+                <div
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-md ${
+                    isIA
+                      ? 'bg-[#121826] border border-[#26334d] text-[#fcdc5d]'
+                      : 'bg-[#fcdc5d] text-[#0a0d14] font-bold'
+                  }`}
+                >
+                  {isIA ? <Zap className="w-4 h-4" /> : <User className="w-4 h-4" />}
+                </div>
 
-                <div className={`max-w-[85%] sm:max-w-[75%] space-y-3`}>
+                {/* Message Box */}
+                <div className="space-y-2.5 flex-1">
                   <div
-                    className={`rounded-2xl p-4 text-xs sm:text-sm leading-relaxed shadow-lg ${
+                    className={`rounded-2xl p-3.5 sm:p-4 text-xs sm:text-sm leading-relaxed shadow-lg ${
                       isIA
-                        ? 'bg-[#161c2c] border border-[#232b3e] text-white rounded-tl-sm'
-                        : 'bg-[#fcdc5d] text-[#0a0d14] font-medium rounded-tr-sm'
+                        ? 'bg-gradient-to-b from-[#111724] to-[#0d121c] border border-[#232d42] text-slate-100'
+                        : 'bg-gradient-to-r from-[#fcdc5d] to-[#f7ce3e] text-[#0a0d14] font-semibold border border-[#fcdc5d]'
                     }`}
                   >
                     <div className="whitespace-pre-line">{msg.texto}</div>
-                    <span
-                      className={`text-[10px] block mt-1.5 text-right font-mono ${
-                        isIA ? 'text-[#94a3b8]' : 'text-[#0a0d14]/70'
-                      }`}
-                    >
-                      {msg.timestamp}
-                    </span>
                   </div>
 
-                  {/* Resumo do Pedido / Card de Conclusão */}
+                  {/* Diagnostic Summary Card upon completion */}
                   {msg.resumoPedido && (
-                    <div className="bg-[#111622] rounded-2xl p-5 border border-emerald-500/40 shadow-xl space-y-3">
-                      <div className="flex items-center justify-between pb-2 border-b border-[#232b3e]">
-                        <span className="text-[10px] font-mono uppercase text-[#94a3b8]">
-                          Protocolo de Atendimento
-                        </span>
-                        <span className="text-xs font-bold font-mono text-emerald-400">
-                          #{msg.resumoPedido.protocolo}
+                    <div className="lumimotion-card rounded-2xl p-4 sm:p-5 border-emerald-500/40 space-y-3 shadow-[0_0_25px_rgba(52,211,153,0.1)]">
+                      <div className="flex items-center justify-between pb-2 border-b border-[#232d42]">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          <span className="text-xs font-bold text-white uppercase tracking-wider">
+                            Resumo do Diagnóstico Técnico
+                          </span>
+                        </div>
+                        <span className="text-xs font-mono font-bold text-[#fcdc5d]">
+                          {msg.resumoPedido.protocolo}
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                        <div>
-                          <span className="text-[#94a3b8]">Serviço:</span>
-                          <p className="font-bold text-white">{msg.resumoPedido.servico}</p>
-                        </div>
-                        <div>
-                          <span className="text-[#94a3b8]">Equipamento:</span>
-                          <p className="font-bold text-white">{msg.resumoPedido.maquina}</p>
-                        </div>
-                        <div>
-                          <span className="text-[#94a3b8]">Local / Empresa:</span>
-                          <p className="font-bold text-white">{msg.resumoPedido.empresa}</p>
-                        </div>
-                        <div>
-                          <span className="text-[#94a3b8]">Status:</span>
-                          <p className="font-bold text-emerald-400">Em Análise Técnica Imediata</p>
-                        </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300">
+                        <p>
+                          <strong className="text-slate-400 font-medium">Serviço:</strong>{' '}
+                          {msg.resumoPedido.servico}
+                        </p>
+                        <p>
+                          <strong className="text-slate-400 font-medium">Equipamento:</strong>{' '}
+                          {msg.resumoPedido.maquina}
+                        </p>
+                        <p>
+                          <strong className="text-slate-400 font-medium">Tensão:</strong>{' '}
+                          {msg.resumoPedido.tensao}
+                        </p>
+                        <p>
+                          <strong className="text-slate-400 font-medium">Solicitante:</strong>{' '}
+                          {msg.resumoPedido.contato}
+                        </p>
                       </div>
 
+                      {/* WhatsApp Dispatch Button */}
                       <a
-                        href={`https://wa.me/5519983808498?text=${encodeURIComponent(
-                          `Olá TecManutenções! Acabei de abrir o chamado técnico ${msg.resumoPedido.protocolo} no chat IA.\n\n*Serviço:* ${msg.resumoPedido.servico}\n*Equipamento:* ${msg.resumoPedido.maquina}\n*Local:* ${msg.resumoPedido.empresa}\n*Contato:* ${msg.resumoPedido.contato}`
-                        )}`}
+                        href={getWhatsAppLink(msg.resumoPedido)}
                         target="_blank"
                         rel="noreferrer"
-                        className="w-full mt-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#0a0d14] font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20"
+                        className="w-full mt-2 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-neutral-950 font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 active:scale-98 transition-all"
                       >
-                        <Phone className="w-4 h-4" />
-                        <span>Falar Direto no WhatsApp da Engenharia</span>
+                        <MessageSquare className="w-4 h-4" />
+                        <span>Falar Imediatamente com Engenheiro no WhatsApp</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     </div>
                   )}
 
-                  {/* Botões de Opções Rápidas */}
-                  {msg.opcoesRapidas && msg.opcoesRapidas.length > 0 && etapa < 6 && (
+                  {/* Quick Response Action Chips (Horizontal scroll on mobile) */}
+                  {msg.opcoesRapidas && msg.opcoesRapidas.length > 0 && (
                     <div className="flex flex-wrap gap-2 pt-1">
                       {msg.opcoesRapidas.map((opcao, idx) => (
                         <button
                           key={idx}
                           onClick={() => handleOpcaoRapida(opcao.valor)}
-                          className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-[#111622] hover:bg-[#fcdc5d] text-[#94a3b8] hover:text-[#0a0d14] border border-[#232b3e] hover:border-[#fcdc5d] transition-all transform active:scale-95 shadow-sm"
+                          className="px-3.5 py-2 rounded-xl bg-[#121927] hover:bg-[#1c273c] border border-[#232d42] hover:border-[#fcdc5d]/50 text-xs font-semibold text-slate-200 hover:text-white transition-all shadow-sm flex items-center gap-1.5 active:scale-95 text-left"
                         >
-                          {opcao.rotulo}
+                          <span>{opcao.rotulo}</span>
+                          <ChevronRight className="w-3 h-3 text-slate-500" />
                         </button>
                       ))}
                     </div>
                   )}
-                </div>
 
-                {!isIA && (
-                  <div className="w-8 h-8 rounded-full bg-[#161c2c] border border-[#232b3e] flex items-center justify-center text-white shrink-0 mt-1">
-                    <User className="w-4 h-4" />
+                  {/* Timestamp */}
+                  <div
+                    className={`text-[10px] text-slate-500 ${
+                      isIA ? 'text-left' : 'text-right'
+                    }`}
+                  >
+                    {msg.timestamp}
                   </div>
-                )}
+                </div>
               </div>
             );
           })}
 
+          {/* Typing Indicator Animation */}
           {isDigitando && (
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#fcdc5d]/10 border border-[#fcdc5d]/30 flex items-center justify-center text-[#fcdc5d] shrink-0">
-                <Bot className="w-4 h-4" />
+            <div className="flex gap-3 items-center mr-auto">
+              <div className="w-8 h-8 rounded-xl bg-[#121826] border border-[#26334d] text-[#fcdc5d] flex items-center justify-center">
+                <Zap className="w-4 h-4" />
               </div>
-              <div className="bg-[#161c2c] border border-[#232b3e] px-4 py-3 rounded-2xl rounded-tl-sm flex items-center gap-1.5">
+              <div className="rounded-2xl px-4 py-3 bg-[#111724] border border-[#232d42] flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#fcdc5d] animate-bounce"></span>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#fcdc5d] animate-bounce [animation-delay:0.2s]"></span>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#fcdc5d] animate-bounce [animation-delay:0.4s]"></span>
@@ -373,27 +437,31 @@ export default function AtendimentoIAPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar */}
-        <form onSubmit={handleEnviar} className="mt-4 pt-3 border-t border-[#232b3e] flex gap-2">
-          <input
-            type="text"
-            value={inputTexto}
-            onChange={(e) => setInputTexto(e.target.value)}
-            placeholder={
-              etapa === 6
-                ? 'Chamado finalizado. Deseja enviar mais alguma informação?'
-                : 'Digite sua mensagem ou escolha uma opção acima...'
-            }
-            className="flex-1 bg-[#161c2c] border border-[#232b3e] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-[#94a3b8] focus:outline-none focus:border-[#fcdc5d] transition-all"
-          />
-          <button
-            type="submit"
-            disabled={!inputTexto.trim()}
-            className="px-5 bg-[#fcdc5d] hover:bg-[#f5cb3c] disabled:opacity-40 text-[#0a0d14] font-bold rounded-xl flex items-center justify-center transition-all shadow-md active:scale-95"
+        {/* Bottom Input Field Container */}
+        <div className="sticky bottom-2 z-20 pt-2">
+          <form
+            onSubmit={handleEnviar}
+            className="flex items-center gap-2 p-1.5 sm:p-2 rounded-2xl lumimotion-card shadow-2xl"
           >
-            <Send className="w-4 h-4" />
-          </button>
-        </form>
+            <input
+              type="text"
+              value={inputTexto}
+              onChange={(e) => setInputTexto(e.target.value)}
+              placeholder="Digite sua resposta técnica ou dúvida..."
+              className="flex-1 px-3 sm:px-4 py-2.5 bg-transparent text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none"
+            />
+
+            <button
+              type="submit"
+              disabled={!inputTexto.trim()}
+              className="p-2.5 sm:px-4 sm:py-2.5 rounded-xl bg-[#fcdc5d] hover:bg-[#f5cb3c] disabled:opacity-40 text-[#0a0d14] font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-md shadow-[#fcdc5d]/20 active:scale-95 cursor-pointer shrink-0"
+              aria-label="Enviar Mensagem"
+            >
+              <Send className="w-4 h-4" />
+              <span className="hidden sm:inline">Enviar</span>
+            </button>
+          </form>
+        </div>
       </main>
     </div>
   );
