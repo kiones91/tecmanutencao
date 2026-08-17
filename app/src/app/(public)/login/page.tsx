@@ -170,9 +170,9 @@ function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto my-8 relative">
-      {/* ── Outer circuit-style nodes with lines connected to card (Desktop) ── */}
-      <div className="pointer-events-none hidden md:block absolute top-0 right-0 bottom-0 left-0">
+    <>
+      {/* ── Outer circuit-style nodes — fixed to viewport, purely decorative ── */}
+      <div className="pointer-events-none hidden md:block fixed inset-0 z-10">
         
         {/* Left upper node */}
         <div className="absolute left-4 top-1/4 flex items-center gap-2 text-neutral-700">
@@ -230,7 +230,10 @@ function LoginForm() {
       </div>
 
       {/* ── Main Glassmorphic Card (Fiel ao NeonGrid) ── */}
-      <div className="sm:px-10 sm:py-10 bg-gradient-to-b from-neutral-900 via-neutral-900 to-neutral-800 max-w-md border-neutral-800 border rounded-3xl mr-auto ml-auto pt-8 pr-6 pb-8 pl-6 relative shadow-2xl">
+      <div
+        className="w-full max-w-md bg-gradient-to-b from-neutral-900 via-neutral-900 to-neutral-800 border-neutral-800 border rounded-3xl relative shadow-2xl z-20"
+        style={{ padding: '2.5rem' }}
+      >
         
         {/* Top glow dots */}
         <div className="absolute left-10 top-5 hidden h-1.5 w-16 rounded-full bg-neutral-700/60 sm:block"></div>
@@ -482,7 +485,7 @@ function LoginForm() {
           </form>
         )}
       </div>
-    </div>
+    </>
   );
 }
 
