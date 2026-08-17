@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 
-// ─── NeonGrid Background Canvas ───────────────────────────────────────────────
-function NeonGridBackground() {
+// ─── 3D Perspective Neon Grid Background ─────────────────────────────────────
+function NeonPerspectiveBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -15,219 +15,306 @@ function NeonGridBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let rafId: number;
-    let W = (canvas.width = window.innerWidth);
-    let H = (canvas.height = window.innerHeight);
+    let animId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
     const onResize = () => {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     };
     window.addEventListener('resize', onResize);
 
-    const CELL = 44;
-    type Beam = { x: number; y: number; len: number; spd: number; op: number; vert: boolean; rgb: string };
-
-    const beams: Beam[] = Array.from({ length: 14 }, () => ({
-      x: Math.floor((Math.random() * window.innerWidth) / CELL) * CELL,
-      y: Math.floor((Math.random() * window.innerHeight) / CELL) * CELL,
-      len: Math.random() * 120 + 80,
-      spd: Math.random() * 0.6 + 0.25,
-      op: Math.random() * 0.35 + 0.15,
-      vert: Math.random() > 0.4,
-      rgb: Math.random() > 0.45 ? '252,220,93' : '52,211,153',
-    }));
+    let offset = 0;
 
     const draw = () => {
-      ctx.clearRect(0, 0, W, H);
-      // grid
+      ctx.clearRect(0, 0, width, height);
+
+      const cx = width / 2;
+      const cy = height * 0.45; // Vanishing point
+      const bottomY = height;
+
+      // Vertical perspective lines
       ctx.lineWidth = 1;
-      ctx.strokeStyle = 'rgba(35,45,66,0.22)';
-      for (let x = 0; x <= W; x += CELL) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
-      for (let y = 0; y <= H; y += CELL) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-      // beams
-      beams.forEach((b) => {
-        ctx.save();
-        const g = b.vert
-          ? ctx.createLinearGradient(b.x, b.y - b.len, b.x, b.y)
-          : ctx.createLinearGradient(b.x - b.len, b.y, b.x, b.y);
-        g.addColorStop(0, `rgba(${b.rgb},0)`);
-        g.addColorStop(0.8, `rgba(${b.rgb},${b.op})`);
-        g.addColorStop(1, `rgba(${b.rgb},${b.op * 1.5})`);
-        ctx.strokeStyle = g;
-        ctx.lineWidth = 1.5;
-        ctx.shadowColor = `rgba(${b.rgb},0.7)`;
-        ctx.shadowBlur = 6;
+      const numLines = 36;
+      for (let i = -numLines / 2; i <= numLines / 2; i++) {
+        const spread = (i / (numLines / 2));
+        const startX = cx + spread * (width * 0.9);
+        
+        const grad = ctx.createLinearGradient(cx, cy, startX, bottomY);
+        grad.addColorStop(0, 'rgba(52, 211, 153, 0.0)');
+        grad.addColorStop(0.3, 'rgba(52, 211, 153, 0.05)');
+        grad.addColorStop(0.8, 'rgba(52, 211, 153, 0.18)');
+        grad.addColorStop(1, 'rgba(52, 211, 153, 0.0)');
+
+        ctx.strokeStyle = grad;
         ctx.beginPath();
-        if (b.vert) {
-          ctx.moveTo(b.x, b.y - b.len); ctx.lineTo(b.x, b.y);
-          b.y += b.spd;
-          if (b.y - b.len > H) { b.y = 0; b.x = Math.floor((Math.random() * W) / CELL) * CELL; }
-        } else {
-          ctx.moveTo(b.x - b.len, b.y); ctx.lineTo(b.x, b.y);
-          b.x += b.spd;
-          if (b.x - b.len > W) { b.x = 0; b.y = Math.floor((Math.random() * H) / CELL) * CELL; }
-        }
+        ctx.moveTo(cx + spread * 40, cy);
+        ctx.lineTo(startX, bottomY);
         ctx.stroke();
-        ctx.restore();
-      });
-      rafId = requestAnimationFrame(draw);
+      }
+
+      // Horizontal moving grid lines
+      offset = (offset + 0.35) % 40;
+      for (let y = cy + 20; y < bottomY; y += 35) {
+        const adjustedY = y + offset;
+        if (adjustedY >= bottomY) continue;
+
+        const progress = (adjustedY - cy) / (bottomY - cy);
+        const halfW = (width * 0.85) * Math.pow(progress, 1.4);
+
+        const hGrad = ctx.createLinearGradient(cx - halfW, adjustedY, cx + halfW, adjustedY);
+        hGrad.addColorStop(0, 'rgba(52, 211, 153, 0)');
+        hGrad.addColorStop(0.5, `rgba(52, 211, 153, ${0.18 * progress})`);
+        hGrad.addColorStop(1, 'rgba(52, 211, 153, 0)');
+
+        ctx.strokeStyle = hGrad;
+        ctx.beginPath();
+        ctx.moveTo(cx - halfW, adjustedY);
+        ctx.lineTo(cx + halfW, adjustedY);
+        ctx.stroke();
+      }
+
+      animId = requestAnimationFrame(draw);
     };
 
     draw();
-    return () => { window.removeEventListener('resize', onResize); cancelAnimationFrame(rafId); };
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      cancelAnimationFrame(animId);
+    };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" style={{ opacity: 0.45 }} />;
+  return (
+    <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+      {/* Dark vignette */}
+      <div
+        className="absolute inset-0 z-10"
+        style={{
+          background: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0.95) 85%, #0a0a0a 100%)',
+        }}
+      />
+      {/* Central Horizon Glow */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] pointer-events-none blur-[120px] rounded-full"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(52,211,153,0.08) 0%, rgba(252,220,93,0.04) 45%, transparent 70%)',
+        }}
+      />
+      <canvas ref={canvasRef} className="w-full h-full opacity-60" />
+    </div>
+  );
 }
 
-// ─── Login Form ────────────────────────────────────────────────────────────────
+// ─── Login Form Component ──────────────────────────────────────────────────────
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirectTo') || '/admin';
 
+  const [mode, setMode] = useState<'login' | 'reset'>('login');
   const [email, setEmail] = useState('kiones91@gmail.com');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
-  const [remember, setRemember] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resetSuccess, setResetSuccess] = useState<string | null>(null);
 
   const supabase = createClient();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     try {
-      const { data, error: err } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+      const { data, error: err } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
       if (err) {
-        setError(err.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos.' : err.message);
+        setError(err.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos no Supabase.' : err.message);
         setLoading(false);
         return;
       }
-      if (data.user) { router.push(redirectTo); router.refresh(); }
+      if (data.user) {
+        router.push(redirectTo);
+        router.refresh();
+      }
     } catch {
-      setError('Erro inesperado. Tente novamente.');
+      setError('Ocorreu um erro inesperado. Tente novamente.');
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setResetSuccess(null);
+    try {
+      const { error: err } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${window.location.origin}/admin`,
+      });
+      if (err) {
+        setError(err.message);
+      } else {
+        setResetSuccess(`Link de recuperação enviado com sucesso para ${email} via Supabase! Verifique sua caixa de entrada.`);
+      }
+    } catch {
+      setError('Falha ao solicitar redefinição de senha no Supabase.');
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    /* ── Wrapper: ocupa toda a tela e centraliza o card ── */
-    <div className="relative z-10 w-full min-h-screen flex items-center justify-center px-4 py-10">
-
-      {/* ── Outer circuit nodes (visíveis apenas em md+) ── */}
-      <div className="pointer-events-none hidden md:block absolute inset-0">
-        {/* node topo-esquerda */}
+    <div className="w-full max-w-5xl mx-auto my-8 relative">
+      {/* ── Outer circuit-style nodes with lines connected to card (Desktop) ── */}
+      <div className="pointer-events-none hidden md:block absolute top-0 right-0 bottom-0 left-0">
+        
+        {/* Left upper node */}
         <div className="absolute left-4 top-1/4 flex items-center gap-2 text-neutral-700">
-          <div className="h-px w-8 bg-neutral-800" />
+          <div className="h-px flex-1 bg-neutral-800 translate-x-2"></div>
           <div className="relative h-9 w-16 rounded-xl bg-neutral-900/80 shadow-[0_0_0_1px_rgba(82,82,91,0.4)] flex items-center justify-center">
-            <div className="h-1 w-10 rounded-full bg-neutral-700" />
-            <span className="absolute -left-1 h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.65)] animate-pulse" />
+            <div className="h-1 w-10 rounded-full bg-neutral-700"></div>
+            {/* Pulsing chip dot */}
+            <span className="absolute -left-1 h-1 w-1 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.65)] animate-pulse"></span>
           </div>
-          <div className="h-px w-12 bg-neutral-800" />
+          {/* Line to card */}
+          <div className="h-px w-12 bg-neutral-800"></div>
         </div>
-        {/* node baixo-esquerda */}
+
+        {/* Left bottom node */}
         <div className="absolute left-10 bottom-10 flex items-center gap-2 text-neutral-700">
-          <div className="h-px w-8 bg-neutral-800" />
+          <div className="h-px flex-1 bg-neutral-800 translate-x-2"></div>
           <div className="relative h-9 w-20 rounded-xl bg-neutral-900/80 shadow-[0_0_0_1px_rgba(82,82,91,0.4)] flex items-center justify-center">
-            <div className="flex gap-1"><span className="h-1 w-2 rounded bg-neutral-700" /><span className="h-1 w-2 rounded bg-neutral-700/60" /><span className="h-1 w-2 rounded bg-neutral-700/40" /></div>
-            <span className="absolute -left-1 h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.65)] animate-pulse" />
+            <div className="flex gap-1">
+              <span className="h-1 w-2 rounded bg-neutral-700"></span>
+              <span className="h-1 w-2 rounded bg-neutral-700/60"></span>
+              <span className="h-1 w-2 rounded bg-neutral-700/40"></span>
+            </div>
+            {/* Pulsing chip dot */}
+            <span className="absolute -left-1 h-1 w-1 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.65)] animate-pulse"></span>
           </div>
-          <div className="h-px w-16 bg-neutral-800" />
+          {/* Line to card */}
+          <div className="h-px w-16 bg-neutral-800"></div>
         </div>
-        {/* node topo-direita */}
+
+        {/* Right upper node */}
         <div className="absolute right-4 top-1/5 flex items-center gap-2 text-neutral-700">
-          <div className="h-px w-16 bg-neutral-800" />
+          {/* Line to card */}
+          <div className="h-px w-16 bg-neutral-800"></div>
           <div className="relative h-9 w-20 rounded-xl bg-neutral-900/80 shadow-[0_0_0_1px_rgba(82,82,91,0.4)] flex items-center justify-center">
-            <span className="h-1 w-6 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.65)]" />
-            <span className="absolute -right-1 h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.65)] animate-pulse" />
+            <div className="flex gap-1">
+              <span className="h-1 w-6 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.65)]"></span>
+            </div>
+            {/* Pulsing chip dot */}
+            <span className="absolute -right-1 h-1 w-1 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.65)] animate-pulse"></span>
           </div>
-          <div className="h-px w-8 bg-neutral-800" />
+          <div className="h-px flex-1 bg-neutral-800 -translate-x-2"></div>
         </div>
-        {/* node baixo-direita */}
+
+        {/* Right bottom node */}
         <div className="absolute right-8 bottom-16 flex items-center gap-2 text-neutral-700">
-          <div className="h-px w-10 bg-neutral-800" />
+          {/* Line to card */}
+          <div className="h-px w-10 bg-neutral-800"></div>
           <div className="relative h-9 w-16 rounded-xl bg-neutral-900/80 shadow-[0_0_0_1px_rgba(82,82,91,0.4)] flex items-center justify-center">
-            <div className="h-1 w-8 rounded-full bg-neutral-700" />
-            <span className="absolute -right-1 h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.65)] animate-pulse" />
+            <div className="h-1 w-8 rounded-full bg-neutral-700"></div>
+            {/* Pulsing chip dot */}
+            <span className="absolute -right-1 h-1 w-1 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.65)] animate-pulse"></span>
           </div>
-          <div className="h-px w-8 bg-neutral-800" />
+          <div className="h-px flex-1 bg-neutral-800 -translate-x-2"></div>
         </div>
       </div>
 
-      {/* ── Card principal ── */}
-      <div
-        className="w-full max-w-md relative rounded-3xl border border-neutral-800 shadow-xl"
-        style={{ background: 'linear-gradient(to bottom, #171c28, #111520, #0d1019)' }}
-      >
-        {/* top decorative bars */}
-        <div className="absolute left-10 top-5 hidden h-1.5 w-16 rounded-full bg-neutral-700/60 sm:block" />
-        <div className="absolute right-10 top-5 hidden h-1.5 w-10 rounded-full bg-neutral-700/30 sm:block" />
+      {/* ── Main Glassmorphic Card (Fiel ao NeonGrid) ── */}
+      <div className="sm:px-10 sm:py-10 bg-gradient-to-b from-neutral-900 via-neutral-900 to-neutral-800 max-w-md border-neutral-800 border rounded-3xl mr-auto ml-auto pt-8 pr-6 pb-8 pl-6 relative shadow-2xl">
+        
+        {/* Top glow dots */}
+        <div className="absolute left-10 top-5 hidden h-1.5 w-16 rounded-full bg-neutral-700/60 sm:block"></div>
+        <div className="absolute right-10 top-5 hidden h-1.5 w-10 rounded-full bg-neutral-700/30 sm:block"></div>
 
-        <div className="px-6 pb-8 pt-8 sm:px-10 sm:pb-10">
-
-          {/* ── Logo Icon ── */}
-          <div className="flex justify-center">
-            <div className="flex w-14 h-14 rounded-2xl bg-neutral-900 shadow-[0_0_0_1px_rgba(82,82,91,0.7)] items-center justify-center">
-              <div className="flex w-10 h-10 rounded-2xl bg-neutral-950 items-center justify-center">
-                {/* Zap / Raio SVG */}
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fcdc5d" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ filter: 'drop-shadow(0 0 8px rgba(252,220,93,0.8))' }}>
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                </svg>
-              </div>
+        {/* Logo / Brand Icon */}
+        <div className="flex justify-center">
+          <div className="flex bg-neutral-900 w-14 h-14 rounded-2xl relative shadow-[0_0_0_1px_rgba(82,82,91,0.7)] items-center justify-center">
+            <div className="flex bg-neutral-950 w-10 h-10 rounded-2xl relative items-center justify-center">
+              {/* Duotone Sparkles / Lightning Icon */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style={{ color: '#34d399' }} className="w-[24px] h-[24px]" aria-hidden="true" role="img" strokeWidth="2">
+                <path fill="#34d399" d="M2.535 11.916c0 5.267 4.238 9.537 9.465 9.537s9.465-4.27 9.465-9.537a9.54 9.54 0 0 0-5.335-8.584a.776.776 0 0 1-.355-1.033a.765.765 0 0 1 1.026-.358A11.09 11.09 0 0 1 23 11.916C23 18.038 18.075 23 12 23S1 18.038 1 11.916C1 6.548 4.787 2.073 9.815 1.051c1.689-.343 2.952 1.104 2.952 2.617v2.134c1.894.364 3.326 2.05 3.326 4.076V14c0 2.291-1.832 4.148-4.093 4.148c-2.26 0-4.093-1.857-4.093-4.148V9.878c0-2.025 1.432-3.711 3.326-4.075V3.668c0-.766-.588-1.208-1.115-1.101c-4.326.879-7.583 4.732-7.583 9.35" opacity=".5"></path>
+                <path fill="#34d399" d="M7.907 13.954c0 2.29 1.833 4.148 4.093 4.148s4.093-1.857 4.093-4.148v-3.37H7.907zm4.861-4.616h3.253c-.312-1.667-1.608-3.292-3.253-3.609zm-1.535 0V5.73c-1.645.317-2.942 1.942-3.254 3.61z"></path>
+              </svg>
             </div>
           </div>
+        </div>
 
-          {/* ── Heading ── */}
-          <div className="mt-6 text-center">
-            <h1 className="text-[22px] leading-tight tracking-tight font-semibold text-neutral-50">
-              TecManutenções ERP
-            </h1>
-            <p className="mt-2 text-sm font-normal text-neutral-400">
-              Acesse seu painel operacional.{' '}
-              <a
-                href="https://wa.me/5519983808498?text=Preciso+de+ajuda+para+acessar+o+painel+TecManuten%C3%A7%C3%B5es"
-                target="_blank"
-                rel="noreferrer"
-                className="font-medium text-[#fcdc5d] hover:text-[#f5cb3c] transition-colors"
-              >
-                Precisa de ajuda?
-              </a>
-            </p>
+        {/* Heading */}
+        <div className="mt-6 text-center">
+          <h1 className="text-[22px] leading-tight tracking-tight font-semibold text-neutral-50">
+            {mode === 'login' ? 'Sign in to NeonGrid' : 'Recuperar Senha'}
+          </h1>
+          <p className="mt-2 text-sm font-normal text-neutral-400">
+            {mode === 'login' ? (
+              <>
+                TecManutenções ERP.{' '}
+                <button
+                  type="button"
+                  onClick={() => { setMode('reset'); setError(null); setResetSuccess(null); }}
+                  className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  Esqueceu a senha?
+                </button>
+              </>
+            ) : (
+              <>
+                Informe seu e-mail do Supabase.{' '}
+                <button
+                  type="button"
+                  onClick={() => { setMode('login'); setError(null); setResetSuccess(null); }}
+                  className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  Voltar ao Login
+                </button>
+              </>
+            )}
+          </p>
+        </div>
+
+        {/* Alerts */}
+        {error && (
+          <div className="mt-5 p-3 rounded-xl bg-red-950/40 border border-red-800/60 text-xs text-red-300 leading-relaxed animate-in fade-in">
+            {error}
           </div>
+        )}
 
-          {/* ── Error ── */}
-          {error && (
-            <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-red-800/60 bg-red-950/40 px-3.5 py-3 text-xs text-red-300">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <span>{error}</span>
-            </div>
-          )}
+        {resetSuccess && (
+          <div className="mt-5 p-3 rounded-xl bg-emerald-950/40 border border-emerald-800/60 text-xs text-emerald-300 leading-relaxed animate-in fade-in">
+            {resetSuccess}
+          </div>
+        )}
 
-          {/* ── Form ── */}
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-
-            {/* Email */}
+        {/* ── Form Section ── */}
+        {mode === 'login' ? (
+          <form onSubmit={handleLogin} className="mt-8 space-y-5">
+            {/* Work email */}
             <div className="space-y-2">
               <label htmlFor="email" className="block text-xs font-medium uppercase tracking-[0.16em] text-neutral-400">
-                E-mail de acesso
+                Work email
               </label>
-              <div
-                className="flex items-center rounded-xl border border-neutral-800 px-3 py-2.5 text-sm text-neutral-100 shadow-inner shadow-black/40 transition-all focus-within:border-[#fcdc5d]/60 focus-within:ring-1 focus-within:ring-[#fcdc5d]/40"
-                style={{ background: 'rgba(10,12,22,0.6)' }}
-              >
-                {/* mail icon */}
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-neutral-500"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <div className="flex items-center rounded-xl border border-neutral-800 bg-neutral-950/60 px-3 py-2.5 text-sm text-neutral-100 shadow-inner shadow-black/40 focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500/70 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="16" height="16" viewBox="0 0 24 24" className="h-4 w-4 text-neutral-500 shrink-0">
+                  <path fill="currentColor" d="M22 5a3 3 0 1 1-6 0a3 3 0 0 1 6 0"></path>
+                  <path fill="currentColor" d="M15.612 2.038C14.59 2 13.399 2 12 2C7.286 2 4.929 2 3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12c0-1.399 0-2.59-.038-3.612a4.5 4.5 0 0 1-6.35-6.35" opacity=".5"></path>
+                  <path fill="currentColor" d="M3.465 20.536C4.929 22 7.286 22 12 22s7.072 0 8.536-1.465C21.893 19.179 21.993 17.056 22 13h-3.16c-.905 0-1.358 0-1.755.183c-.398.183-.693.527-1.282 1.214l-.605.706c-.59.687-.884 1.031-1.282 1.214s-.85.183-1.755.183h-.321c-.905 0-1.358 0-1.756-.183s-.692-.527-1.281-1.214l-.606-.706c-.589-.687-.883-1.031-1.281-1.214S6.066 13 5.16 13H2c.007 4.055.107 6.179 1.465 7.535"></path>
+                </svg>
                 <input
                   id="email"
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu@email.com"
+                  placeholder="kiones91@gmail.com"
                   className="ml-3 flex-1 bg-transparent text-sm font-normal text-neutral-100 placeholder:text-neutral-600 focus:outline-none"
                 />
               </div>
@@ -237,150 +324,177 @@ function LoginForm() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label htmlFor="password" className="block text-xs font-medium uppercase tracking-[0.16em] text-neutral-400">
-                  Senha
+                  Password
                 </label>
-                <a
-                  href="https://wa.me/5519983808498?text=Esqueci+minha+senha+do+painel+TecManuten%C3%A7%C3%B5es"
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  type="button"
+                  onClick={() => { setMode('reset'); setError(null); setResetSuccess(null); }}
                   className="text-xs font-medium text-neutral-400 hover:text-neutral-100 transition-colors"
                 >
-                  Esqueceu?
-                </a>
+                  Forgot?
+                </button>
               </div>
-              <div
-                className="flex items-center rounded-xl border border-neutral-800 px-3 py-2.5 text-sm text-neutral-100 shadow-inner shadow-black/40 transition-all focus-within:border-[#fcdc5d]/60 focus-within:ring-1 focus-within:ring-[#fcdc5d]/40"
-                style={{ background: 'rgba(10,12,22,0.6)' }}
-              >
-                {/* lock icon */}
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-neutral-500"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <div className="flex shadow-black/40 focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500/70 text-sm text-neutral-100 bg-neutral-950/60 border-neutral-800 border rounded-xl pt-2.5 pr-3 pb-2.5 pl-3 shadow-inner items-center transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style={{ color: 'rgb(115, 115, 115)' }} className="text-neutral-500 w-[16px] h-[16px] shrink-0" aria-hidden="true" role="img" strokeWidth="2">
+                  <path fill="#737373" d="M2 16c0-2.828 0-4.243.879-5.121C3.757 10 5.172 10 8 10h8c2.828 0 4.243 0 5.121.879C22 11.757 22 13.172 22 16s0 4.243-.879 5.121C20.243 22 18.828 22 16 22H8c-2.828 0-4.243 0-5.121-.879C2 20.243 2 18.828 2 16" opacity=".5"></path>
+                  <path fill="#737373" d="M6.75 8a5.25 5.25 0 0 1 10.5 0v2.004c.567.005 1.064.018 1.5.05V8a6.75 6.75 0 0 0-13.5 0v2.055a24 24 0 0 1 1.5-.051z"></path>
+                </svg>
                 <input
                   id="password"
                   type={showPass ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••"
-                  className="ml-3 flex-1 bg-transparent text-sm font-normal text-neutral-100 placeholder:text-neutral-600 focus:outline-none font-mono tracking-wider"
+                  placeholder="Enter your password"
+                  className="ml-3 flex-1 bg-transparent text-sm font-normal text-neutral-100 placeholder:text-neutral-600 focus:outline-none font-mono"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
                   className="ml-2 rounded-full px-2 py-1 text-[11px] font-medium text-neutral-400 hover:bg-neutral-800/80 hover:text-neutral-100 transition"
                 >
-                  {showPass ? 'Ocultar' : 'Ver'}
+                  {showPass ? 'Hide' : 'Show'}
                 </button>
               </div>
             </div>
 
-            {/* Remember me */}
-            <div className="flex items-center gap-2.5">
-              <input
-                id="remember"
-                type="checkbox"
-                checked={remember}
-                onChange={(e) => setRemember(e.target.checked)}
-                className="h-4 w-4 rounded border-neutral-700 bg-neutral-900 accent-[#fcdc5d] cursor-pointer focus:ring-0 focus:ring-offset-0"
-              />
-              <label htmlFor="remember" className="cursor-pointer select-none text-xs text-neutral-400 hover:text-neutral-300 transition-colors">
-                Manter conectado
-              </label>
-            </div>
-
-            {/* Submit */}
+            {/* Primary button */}
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 inline-flex w-full items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold text-neutral-900 transition focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#fcdc5d]/80 disabled:opacity-60 cursor-pointer"
-              style={{
-                background: '#fcdc5d',
-                boxShadow: '0 14px 35px rgba(252,220,93,0.45)',
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = '#f5cb3c'; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = '#fcdc5d'; }}
+              className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-neutral-900 shadow-[0_14px_35px_rgba(16,185,129,0.55)] hover:bg-emerald-400 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500/80 transition cursor-pointer disabled:opacity-60"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
-                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
-                  Autenticando...
+                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                  </svg>
+                  Authenticating...
                 </span>
               ) : (
-                'Acessar Painel'
+                'Continue to dashboard'
               )}
             </button>
 
             {/* Divider */}
             <div className="flex items-center gap-4 text-xs text-neutral-500">
-              <div className="h-px flex-1 bg-neutral-800/80" />
-              <span className="font-medium">Acesso Rápido</span>
-              <div className="h-px flex-1 bg-neutral-800/80" />
+              <div className="h-px flex-1 bg-neutral-800/80"></div>
+              <span className="font-medium">OR</span>
+              <div className="h-px flex-1 bg-neutral-800/80"></div>
             </div>
 
-            {/* Quick links */}
+            {/* Social / Quick Access buttons */}
             <div className="grid grid-cols-3 gap-3">
-              {/* WhatsApp */}
+              {/* WhatsApp Quick */}
               <a
                 href="https://wa.me/5519983808498"
                 target="_blank"
                 rel="noreferrer"
-                className="flex flex-col items-center justify-center rounded-xl border border-neutral-800 bg-neutral-900 px-2 py-2.5 text-xs font-medium text-neutral-200 transition hover:border-neutral-700 hover:bg-neutral-800/80"
+                className="flex items-center justify-center rounded-xl border border-neutral-800 bg-neutral-900 px-2 py-2.5 text-xs font-medium text-neutral-200 hover:border-neutral-700 hover:bg-neutral-800/80 transition group"
+                title="WhatsApp Suporte"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#25D366" className="mb-1"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                WhatsApp
+                <span className="sr-only">WhatsApp</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style={{ color: '#34d399' }} className="w-[24px] h-[24px] group-hover:scale-110 transition-transform">
+                  <path fill="#34d399" d="M12 5a7 7 0 1 0 6.93 8H13a1 1 0 1 1 0-2h7a1 1 0 0 1 1 1a9 9 0 1 1-2.654-6.381a1 1 0 0 1-1.41 1.418A6.98 6.98 0 0 0 12 5"></path>
+                </svg>
               </a>
-              {/* Site */}
+
+              {/* Site Oficial */}
               <a
                 href="https://tecmanutencao.vercel.app"
                 target="_blank"
                 rel="noreferrer"
-                className="flex flex-col items-center justify-center rounded-xl border border-neutral-800 bg-neutral-900 px-2 py-2.5 text-xs font-medium text-neutral-200 transition hover:border-neutral-700 hover:bg-neutral-800/80"
+                className="flex items-center justify-center rounded-xl border border-neutral-800 bg-neutral-900 px-2 py-2.5 text-xs font-medium text-neutral-200 hover:border-neutral-700 hover:bg-neutral-800/80 transition group"
+                title="Site Oficial"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="mb-1"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                Site Oficial
+                <span className="sr-only">Site Oficial</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style={{ color: '#34d399' }} className="w-[24px] h-[24px] group-hover:scale-110 transition-transform">
+                  <path fill="#34d399" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 17.93c3.95-.49 7-3.85 7-7.93a7.9 7.9 0 0 0-.17-1.63L15 15.24zM4.07 13A8 8 0 0 1 11 4.07v1.07a2 2 0 0 0 2 2v2a2 2 0 0 0 2 2h2v2a1 1 0 0 0 1 1h1.9a8 8 0 0 1-15.83 0z"></path>
+                </svg>
               </a>
+
               {/* Atendimento */}
               <Link
                 href="/atendimento"
-                className="flex flex-col items-center justify-center rounded-xl border border-neutral-800 bg-neutral-900 px-2 py-2.5 text-xs font-medium text-neutral-200 transition hover:border-neutral-700 hover:bg-neutral-800/80"
+                className="flex items-center justify-center rounded-xl border border-neutral-800 bg-neutral-900 px-2 py-2.5 text-xs font-medium text-neutral-200 hover:border-neutral-700 hover:bg-neutral-800/80 transition group"
+                title="Central de Atendimento"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="mb-1"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
-                Atendimento
+                <span className="sr-only">Atendimento</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style={{ color: '#34d399' }} className="w-[24px] h-[24px] group-hover:scale-110 transition-transform">
+                  <path fill="#34d399" d="M12 2a9 9 0 0 0-9 9v4a3 3 0 0 0 3 3h1v-6H5v-1a7 7 0 1 1 14 0v1h-2v6h1a3 3 0 0 0 3-3v-4a9 9 0 0 0-9-9z"></path>
+                </svg>
               </Link>
             </div>
 
-            {/* Footer */}
+            {/* Subtext */}
             <p className="pt-1 text-[11px] leading-relaxed text-neutral-500 text-center">
-              Ambiente seguro — dados criptografados com{' '}
-              <span className="font-medium text-neutral-200">SSL 256-bit</span>
-              {' '}· v3.4
+              By continuing, you agree to the TecManutenções{' '}
+              <a href="#" className="font-medium text-neutral-200 hover:text-emerald-400 transition-colors">
+                Terms
+              </a>{' '}
+              and{' '}
+              <a href="#" className="font-medium text-neutral-200 hover:text-emerald-400 transition-colors">
+                Privacy Policy
+              </a>.
             </p>
           </form>
-        </div>
+        ) : (
+          /* ── Reset Password Form (Supabase Auth) ── */
+          <form onSubmit={handleResetPassword} className="mt-8 space-y-5">
+            <div className="space-y-2">
+              <label htmlFor="reset-email" className="block text-xs font-medium uppercase tracking-[0.16em] text-neutral-400">
+                E-mail cadastrado
+              </label>
+              <div className="flex items-center rounded-xl border border-neutral-800 bg-neutral-950/60 px-3 py-2.5 text-sm text-neutral-100 shadow-inner shadow-black/40 focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500/70 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="16" height="16" viewBox="0 0 24 24" className="h-4 w-4 text-neutral-500 shrink-0">
+                  <path fill="currentColor" d="M22 5a3 3 0 1 1-6 0a3 3 0 0 1 6 0"></path>
+                  <path fill="currentColor" d="M15.612 2.038C14.59 2 13.399 2 12 2C7.286 2 4.929 2 3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12c0-1.399 0-2.59-.038-3.612a4.5 4.5 0 0 1-6.35-6.35" opacity=".5"></path>
+                  <path fill="currentColor" d="M3.465 20.536C4.929 22 7.286 22 12 22s7.072 0 8.536-1.465C21.893 19.179 21.993 17.056 22 13h-3.16c-.905 0-1.358 0-1.755.183c-.398.183-.693.527-1.282 1.214l-.605.706c-.59.687-.884 1.031-1.282 1.214s-.85.183-1.755.183h-.321c-.905 0-1.358 0-1.756-.183s-.692-.527-1.281-1.214l-.606-.706c-.589-.687-.883-1.031-1.281-1.214S6.066 13 5.16 13H2c.007 4.055.107 6.179 1.465 7.535"></path>
+                </svg>
+                <input
+                  id="reset-email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="seu.email@empresa.com"
+                  className="ml-3 flex-1 bg-transparent text-sm font-normal text-neutral-100 placeholder:text-neutral-600 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-neutral-900 shadow-[0_14px_35px_rgba(16,185,129,0.55)] hover:bg-emerald-400 focus:outline-none transition cursor-pointer disabled:opacity-60"
+            >
+              {loading ? 'Enviando link...' : 'Enviar link via Supabase'}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setMode('login'); setError(null); setResetSuccess(null); }}
+              className="w-full text-center text-xs text-neutral-400 hover:text-neutral-200 transition-colors pt-2"
+            >
+              ← Voltar para o Login
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
 }
 
-// ─── Page ──────────────────────────────────────────────────────────────────────
+// ─── Main Page ─────────────────────────────────────────────────────────────────
 export default function LoginPage() {
   return (
-    <main className="min-h-screen w-full antialiased text-neutral-100" style={{ background: '#0a0c14' }}>
-      {/* Ambient radial glow centralizado */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          background: 'radial-gradient(ellipse 60% 40% at 50% 50%, rgba(252,220,93,0.07) 0%, rgba(52,211,153,0.04) 40%, transparent 70%)',
-        }}
-      />
-      <NeonGridBackground />
+    <main className="min-h-screen antialiased flex items-center justify-center text-neutral-100 bg-neutral-950 pr-4 pl-4 relative overflow-hidden">
+      <NeonPerspectiveBackground />
       <Suspense
         fallback={
-          <div className="fixed inset-0 z-20 flex flex-col items-center justify-center gap-3 text-slate-400">
-            <svg className="animate-spin h-8 w-8 text-[#fcdc5d]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-            </svg>
-            <span className="text-xs font-mono tracking-wider">Inicializando sessão segura...</span>
+          <div className="fixed inset-0 flex items-center justify-center text-neutral-400">
+            <span className="text-xs font-mono">Carregando...</span>
           </div>
         }
       >
